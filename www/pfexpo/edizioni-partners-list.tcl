@@ -2,16 +2,14 @@ ad_page_contract {
     @author Mattia Righetti (mattia.righetti@professionefinanza.com)
     @creation-date 23 December 2014
 } {
+    expo_id:naturalnum
     orderby:optional
 }
 pf::user_must_admin
 set page_title "Partners"
 set admin_menu [pf::admin_menu "pfexpo"]
 set context [list [list / "PFEXPO"] $page_title]
-if {![info exist expo_id]} {
-    set expo_id [ad_get_cookie expo_id]
-}
-set actions "{Attiva partner} {edizioni-partners-gest} {Aggiunge un partner esistente al PFEXPO}"
+set actions "{Attiva partner} {[export_vars -base edizioni-partners-gest {expo_id}]} {Aggiunge un partner esistente al PFEXPO}"
 template::list::create \
     -name partners \
     -multirow partners \

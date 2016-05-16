@@ -50,7 +50,7 @@
 		    <ul class="list-group">
 		      <li class="list-group-item disabled">UTILITY</li>
 		      <li class="list-group-item"><a href="eventi-list">Eventi</a> | <a href="categoriaevento-list">Percorsi evento</a></li>
-		      <li class="list-group-item"><a href="edizioni-partners-list">Partners espositori</a></li>
+		      <li class="list-group-item"><a href="edizioni-partners-list?expo_id=@expo_id@">Partners espositori</a></li>
 		      <li class="list-group-item"><a href="speakers-list">Speakers</a></li>
 		      <li class="list-group-item"><a href="sale-list">Sale</a> | <a href="luoghi-list">Luoghi</a></li>
 		    </ul>

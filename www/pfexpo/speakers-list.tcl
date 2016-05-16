@@ -9,7 +9,7 @@ set page_title "Speakers"
 set context [list [list /pfexpo "PFEXPO"] $page_title]
 template::head::add_css -href ../dashboard.css
 set admin_menu [pf::admin_menu "pfexpo"]
-set actions "{Nuovo speaker} {spakers-gest} {Aggiunge un nuovo speaker}"
+set actions "{Nuovo speaker} {speakers-gest} {Aggiunge un nuovo speaker}"
 template::list::create \
     -name relatori \
     -multirow relatori \
