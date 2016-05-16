@@ -1,0 +1,25 @@
+ad_library {}
+
+namespace eval pf::expo {}
+
+ad_proc -public pf::expo::voucher_check {
+    voucher_code
+} {
+    #Controlla se esiste e ne imposta l'ID                                                                                                                                                   
+    if {![db_0or1row query "select * from expo_voucher where lower(codice) = lower(:voucher_code)"]} {
+        return 0
+    } else {
+        set voucher_id [db_string query "select voucher_id from expo_voucher where lower(codice) = lower(:voucher_code)"]
+    }
+    #Controlla se è ancora disponibile                                                                                                                                                         
+    if {[db_string query "select count(distinct(iscritto_id)) from expo_iscrizioni where voucher_id = :voucher_id"] >= [db_string query "select times from expo_voucher where voucher_id = :voucher_id"]} {
+        return 0
+    }
+    #Controlla se è scaduto                                                                                                                                                                    
+    if {[db_string query "select expiry_date from expo_voucher where voucher_id = :voucher_id"] ne "" } {
+        if {[db_string query "select current_date"] > [db_string query "select expiry_date from expo_voucher where voucher_id = :voucher_id"]} {
+            return 0
+        }
+    }
+    return 1
+}
