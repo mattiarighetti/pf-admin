@@ -19,6 +19,9 @@ template::list::create \
 	speaker {
 	    label "Speaker"
 	}
+	tipo {
+	    label "Modalità di partecipazione"
+	}
    	delete {
 	    link_url_col delete_url 
 	    display_template {<img src="http://images.professionefinanza.com/icons/delete.gif" height="12" border="0">}
@@ -29,6 +32,6 @@ template::list::create \
 db_multirow \
     -extend {
 	delete_url
-    } speaker query "select s.speaker_id, s.nome||' '||s.cognome as speaker from expo_speakers s, expo_eventi_speakers e where e.speaker_id = s.speaker_id and e.evento_id = :evento_id" {
+    } speaker query "select s.speaker_id, s.nome||' '||s.cognome as speaker, t.descrizione as tipo from expo_speakers s, expo_speakers_tipo t, expo_eventi_speakers e where e.speaker_id = s.speaker_id and e.evento_id = :evento_id and e.tipo_id = t.tipo_id" {
 	set delete_url [export_vars -base "eventi-speakers-canc" {evento_id speaker_id}]
     }
