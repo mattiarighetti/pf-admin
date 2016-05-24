@@ -25,6 +25,12 @@ template::list::create \
 	    label "Denominazione"
 	    link_url_col edit_url
 	}
+	docenti {
+	    label "Docenti"
+	    display_template {<img src="http://images.professionefinanza.com/icons/view.gif" height="12" border="0">}
+	    link_url_col docenti_url
+	    sub_class narrow
+	}
 	speaker {
 	    label "Speaker"
 	    display_template {<img src="http://images.professionefinanza.com/icons/view.gif" height="12" border="0">}
@@ -59,12 +65,14 @@ template::list::create \
 db_multirow \
     -extend {
 	edit_url
+	docenti_url
 	speaker_url
 	subscribed_url
 	slides_url
 	delete_url
     } eventi query "select e.evento_id, e.denominazione, count(i.iscritto_id) as iscritti from expo_eventi e left outer join expo_iscrizioni i on e.evento_id = i.evento_id where expo_id = :expo_id [template::list::filter_where_clauses -name eventi -and] group by e.evento_id, e.denominazione [template::list::orderby_clause -name eventi -orderby]" {
 	set edit_url [export_vars -base "eventi-gest" {evento_id}]
+	set docenti_url [export_vars -base "eventi-docenti-list" {evento_id}]
 	set speaker_url [export_vars -base "eventi-speakers-list" {evento_id}]
 	set subscribed_url [export_vars -base "iscritti-list" {evento_id}]
 	set slides_url [export_vars -base "eventi-slides" {evento_id}]
