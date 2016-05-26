@@ -38,9 +38,9 @@ ad_form -name $form_name \
 	    {label "Data iscrizione"}
 	}
     } -select_query {
-	"SELECT INITCAP(LOWER(nome)) AS nome, INITCAP(LOWER(cognome)) AS cognome, LOWER(email) AS email, INITCAP(LOWER(societa)) AS societa, data FROM pf_expo_iscr WHERE iscritto_id = :iscritto_id"
+	"SELECT INITCAP(LOWER(nome)) AS nome, INITCAP(LOWER(cognome)) AS cognome, LOWER(email) AS email, INITCAP(LOWER(societa)) AS societa, data FROM expo_iscritti WHERE iscritto_id = :iscritto_id"
     } -edit_data {
-	db_dml query "UPDATE pf_expo_iscr SET nome = INITCAP(LOWER(:nome)), cognome = INITCAP(LOWER(:cognome)), email = LOWER(:email), societa = INITCAP(LOWER(:societa)) WHERE iscritto_id = :iscritto_id"
+	db_dml query "UPDATE expo_iscritti SET nome = INITCAP(LOWER(:nome)), cognome = INITCAP(LOWER(:cognome)), email = LOWER(:email), societa = INITCAP(LOWER(:societa)) WHERE iscritto_id = :iscritto_id"
     }
 set list_name "iscrizioni"
 template::list::create \
@@ -52,19 +52,26 @@ template::list::create \
 	iscrizione_id {
 	    label "ID"
 	}
-	descrizione {
+	denominazione {
 	    label "Evento"
 	}
 	pagato {
             link_html {title "Clicca per cambiare stato pagamento."}
             link_url_col paid_url
             sub_class narrow
-        }	
+        }
+	delete {
+	    link_html {title "Cancella iscrizione"}
+	    link_url_col delete_url
+	    sub_class narrow
+	    display_template "<img src=\"http://images.professionefinanza.com/icons/delete.gif\" height=\"12px\" border=\"0\""
+	}
     }
 db_multirow \
     -extend {
 	paid_url
-    } $list_name query "SELECT e.descrizione, i.iscrizione_id, CASE WHEN i.pagato = true THEN 'Pagato' WHEN i.pagato = false THEN 'Non pagato' WHEN i.pagato IS NULL THEN '' END AS pagato FROM pf_expo_eventi e, pf_expo_iscrizioni i WHERE i.iscritto_id = :iscritto_id AND e.evento_id = i.evento_id " {
-	set current_url [export_vars -base "iscritto-gest" {iscritto_id return_url}]
-	set paid_url [export_vars -base "iscrizione-paid" {iscrizione_id current_url}]
+	delete_url
+    } $list_name query "SELECT i.iscrizione_id, e.denominazione, CASE WHEN i.pagato = true THEN 'Pagato' WHEN i.pagato = false THEN 'Non pagato' WHEN i.pagato IS NULL THEN '' END AS pagato FROM expo_eventi e, expo_iscrizioni i WHERE i.iscritto_id = :iscritto_id AND e.evento_id = i.evento_id " {
+	set return_url [ad_return_url]
+	set delete_url [export_vars -base "iscrizioni-canc" {iscrizione_id return_url}] 
     }
