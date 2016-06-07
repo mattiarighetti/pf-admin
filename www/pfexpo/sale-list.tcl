@@ -2,7 +2,6 @@ ad_page_contract {
     @author Mattia Righetti (mattia.righetti@professionefinanza.com)
     @creation-date Friday 29 May 2015
 } {
-    expo_id:integer
     orderby:optional
 }
 set page_title "Sale"

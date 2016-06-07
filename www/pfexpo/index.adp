@@ -9,27 +9,23 @@
 	</div>
 	<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 	  <h1 class="page-header">@page_title;noquote@</h1>
-	  <form action="http://sso.professionefinanza.com/pfexpo/index" class="form-inline">
+	  <formtemplate id="edizione">
 	    <div class="form-group">
 	      <div class="input-group">
 		<div class="input-group-addon">PFEXPO</div>
-		<select class="form-control" name="expo_id" type="text" id="cerca_expo_id" style="width:150px;" width="150px">
-		  @expo_id_options;noquote@
-		</select>
+		<formwidget id="expo_id">
 	      </div>      
 	      <input type="hidden" name="module" value="pfexpo" />
-		<input class="btn btn-primary" type="button" value="Vai" />
-		  <input class="btn btn-success" type="button" value="Nuovo" onClick="location.href='expo-gest'" />
-		    <input class="btn btn-success" type="button" value="Modifica" onClick="location.href='expo-gest?expo_id=@expo_id;noquote@'" />
+	      <input class="btn btn-success" type="button" value="Nuovo" onClick="location.href='expo-gest'" />
+	      <input class="btn btn-success" type="button" value="Modifica" onClick="location.href='expo-gest?expo_id=@expo_id;noquote@'" />
 	    </div>
-	  </form></br>
-	  <if @attivo@ eq 1>
-	    <ul class="list-group">
+	  </formtemplate></br>
+	  <ul class="list-group">
 	      <li class="list-group-item">Giorni all'evento: <span class="badge">@giorni;noquote@</span></li>
 	      <li class="list-group-item">Iscritti totali: <span class="badge">@tot_iscr;noquote@</span></li>
 	      <li class="list-group-item">Iscritti oggi: <span class="badge">@oggi_iscr;noquote@</span></li>
 	      	      </ul>
-	  </if>
+	  
 	  
 	  <div class="table-responsive">
 	    <table align="center" border="0" width="100%">
@@ -58,7 +54,8 @@
 		</td>
 	      </tr>
 	    </table>
-	  </div>
+	    </div>
+	  @events_table;noquote@
 	</div>
       </div>
     </div>

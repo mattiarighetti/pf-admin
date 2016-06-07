@@ -2,19 +2,17 @@ ad_page_contract {
     @author Mattia Righetti (mattia.righetti@professionefinanza.com)
     @creation-date 23 December 2014
 } {
-    expo_id:integer,optional
     evento_id:integer,optional
 }
 pf::user_must_admin
+set expo_id [pf::expo_id]
 template::head::add_css -href ../dashboard.css
 template::head::add_css -href http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css
 template::head::add_javascript -src http://code.jquery.com/jquery-1.9.1.min.js
 template::head::add_css -href "http://images.professionefinanza.com/js/summernote/summernote.css" 
 template::head::add_javascript -src "http://images.professionefinanza.com/js/summernote/summernote.js"
 set admin_menu [pf::admin_menu "pfexpo"]
-if {![info exist expo_id]} {
-    set expo_id [ad_get_cookie expo_id]
-}
+set expo_id [pf::expo::id]
 if {[ad_form_new_p -key evento_id]} {
     set page_title "Nuovo"
     set context [list [list /pfexpo/ "PFEXPO"] [list eventi-list "Eventi"] $page_title]

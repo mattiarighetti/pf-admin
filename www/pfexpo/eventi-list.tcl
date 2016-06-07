@@ -2,19 +2,14 @@ ad_page_contract {
     @author Mattia Righetti (mattia.righetti@professionefinanza.com)
     @creation-date 23 December 2014
 } {
-    expo_id:integer,optional
     orderby:optional
 }
 pf::user_must_admin
+set expo_id [pf::expo::id]
 template::head::add_css -href ../dashboard.css
 set admin_menu [pf::admin_menu "pfexpo"]
 set page_title "Eventi"
 set context [list [list /pfexpo "PFEXPO"] $page_title]
-if {![info exist expo_id]} {
-    set expo_id [ad_get_cookie expo_id]
-} else {
-    set expo_id [db_string query "select expo_id from expo_edizioni where attivo is true"]
-}
 set actions [list "Nuovo evento" eventi-gest "Aggiunge un nuovo evento."]
 template::list::create \
     -name eventi \

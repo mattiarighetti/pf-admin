@@ -24,6 +24,15 @@ ad_proc -public pf::expo::voucher_check {
     return 1
 }
 
+ad_proc -public pf::expo::id {
+} {
+    if {[ad_get_cookie expo_id] != ""} {
+	return [ad_get_cookie expo_id]
+    } else {
+	ad_return_complaint 1 "Nessuna edizione PFEXPO selezionata. <a href=\"index\">Ritorna al menu per selezionarla</a>."
+    }
+}
+
 ad_proc -public pf::expo::edition_id {
     {expo_id ""}
 } {
