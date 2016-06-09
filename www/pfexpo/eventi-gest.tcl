@@ -5,7 +5,6 @@ ad_page_contract {
     evento_id:integer,optional
 }
 pf::user_must_admin
-set expo_id [pf::expo_id]
 template::head::add_css -href ../dashboard.css
 template::head::add_css -href http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css
 template::head::add_javascript -src http://code.jquery.com/jquery-1.9.1.min.js
