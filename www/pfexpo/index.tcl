@@ -45,9 +45,9 @@ db_foreach query "select s.denominazione from expo_sale s, expo_luoghi l, expo_e
 append events_table "</tr>"
 foreach orario $orari {
 append events_table "<tr><td class=\"blue\">" $orario "</td>"
-    db_foreach query "select e.denominazione,  c.hex_color, e.permalink, e.start_time, e.end_time from expo_eventi e, expo_percorsi c where e.start_time = :orario and c.percorso_id = e.percorso_id order by sala_id" {
+    db_foreach query "select e.evento_id, e.denominazione,  c.hex_color, e.permalink, e.start_time, e.end_time from expo_eventi e, expo_percorsi c where e.start_time = :orario and c.percorso_id = e.percorso_id order by sala_id" {
 	set rowspan [expr [lsearch $orari $end_time] - [lsearch $orari $start_time] + 1]
-	append events_table "<td rowspan=\"" $rowspan "\" bgcolor=\"" $hex_color "\"><a href=\"" $permalink "\">" $denominazione "<br></a></td>"
+	append events_table "<td rowspan=\"" $rowspan "\" bgcolor=\"" $hex_color "\"><a href=\"" $permalink "\">" $denominazione ($evento_id) "<br></a></td>"
     }
     append events_table "</tr>"
 }
