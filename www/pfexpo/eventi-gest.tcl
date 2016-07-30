@@ -79,7 +79,7 @@ ad_form -name evento \
 	}
 	db_dml query "INSERT INTO expo_eventi (evento_id, denominazione, short_title, permalink, descrizione, sala_id, start_time, end_time, prezzo, expo_id, percorso_id, soldout) VALUES (:evento_id, :denominazione, :short_title, :permalink, :descrizione, :sala_id, $start_time, $end_time, :prezzo::money, :expo_id, :percorso_id, :soldout)"
     } -edit_data {
-	db_dml query "UPDATE expo_eventi SET denominazione = :denominazione, short_title = :short_title, descrizione = :descrizione, sala_id = :sala_id, start_time = $start_time, end_time = $end_time, prezzo = :prezzo::money, permalink = :permalink, soldout = :soldout WHERE evento_id = :evento_id"
+	db_dml query "UPDATE expo_eventi SET denominazione = :denominazione, short_title = :short_title, descrizione = :descrizione, sala_id = :sala_id, start_time = $start_time, end_time = $end_time, prezzo = :prezzo::money, permalink = :permalink, soldout = :soldout, percorso_id = :percorso_id WHERE evento_id = :evento_id"
     } -after_submit {
 	ad_returnredirect "eventi-list"
 	ad_script_abort

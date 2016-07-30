@@ -5,7 +5,14 @@ ad_page_contract {
     orderby:optional
 }
 set page_title "Sale"
-set luogo [db_string query "select l.descrizione from expo_luoghi l, expo_edizioni e where e.luogo_id = l.luogo_id and e.expo_id = :expo_id"]
+if {![info exists expo_id]} {
+    if {[ad_get_cookie expo_id] != ""} {
+        set expo_id [ad_get_cookie expo_id]
+    } else {
+        set expo_id [db_0or1row query "select * from expo_edizioni where attivo is true limit 1"]
+    }
+}
+set luogo [db_string query "select l.denominazione from expo_luoghi l, expo_edizioni e where e.luogo_id = l.luogo_id and e.expo_id = :expo_id"]
 set context [list [list / "Dashboard"] [list ?module=pfexpo "PFEXPO"] $page_title]
 set actions "{Nuova sala} {?module=pfexpo&expo_id=1&template=modules%2Fpfexpo%2Fsale-gest} {Aggiunge una nuova sala}"
 template::list::create \
