@@ -4,6 +4,7 @@ ad_page_contract {
 } {
     expo_id:integer,optional
 }
+pf::user_must_admin
 set page_title "PFEXPO"
 set context [list $page_title]
 if {![info exists expo_id]} {

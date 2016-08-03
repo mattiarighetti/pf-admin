@@ -8,6 +8,7 @@ ad_page_contract {
     orderby:optional
     evento_id:integer,optional
 }
+pf::user_must_admin
 set page_title "Gestione PFEXPO - Iscritti"
 set context [list $page_title]
 set expo_id [db_string query "select expo_id from expo_edizioni where attivo is true"]
