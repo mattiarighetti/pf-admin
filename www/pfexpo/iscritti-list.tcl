@@ -61,7 +61,7 @@ template::list::create \
 	q {
             hide_p 1
             values {$q $q}
-            where_clause {UPPER(p.nome||p.cognome||p.email||p.societa) LIKE UPPER('%$q%')}
+            where_clause {p.nome ILIKE '%$q%' OR p.cognome ILIKE '%$q%' OR p.societa ILIKE '%$q%' OR p.email ILIKE '%$q%' OR p.iscritto_id::text ILIKE '%$q%'}
         }
 	rows_per_page {
 	    label "Righe"
