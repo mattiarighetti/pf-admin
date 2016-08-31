@@ -32,6 +32,12 @@ template::list::create \
 	    link_url_col speaker_url
 	    sub_class narrow
 	}
+	partners {
+	    label "Partners"
+	    display_template {<img src="http://images.professionefinanza.com/icons/view.gif" height="12" border="0">}
+            link_url_col partner_url
+            sub_class narrow
+	}
 	iscritti {
 	    label "Iscritti"
 	    link_url_col subscribed_url
@@ -62,6 +68,7 @@ db_multirow \
 	edit_url
 	docenti_url
 	speaker_url
+	partner_url
 	subscribed_url
 	slides_url
 	delete_url
@@ -69,6 +76,7 @@ db_multirow \
 	set edit_url [export_vars -base "eventi-gest" {evento_id}]
 	set docenti_url [export_vars -base "eventi-docenti-list" {evento_id}]
 	set speaker_url [export_vars -base "eventi-speakers-list" {evento_id}]
+	set partner_url [export_vars -base "eventi-partners-list" {evento_id}]
 	set subscribed_url [export_vars -base "iscritti-list" {evento_id}]
 	set slides_url [export_vars -base "eventi-slides" {evento_id}]
 	set delete_url [export_vars -base "eventi-canc" {evento_id}]
