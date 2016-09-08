@@ -5,8 +5,8 @@ ad_page_contract {
     iscritto_id:integer
     {return_url ""}
 }
-set page_title "Situazione iscritto"
-set context [list [list / {Iscritti}] "$page_title"]
+set page_title "Dettaglio"
+set context [list [list index "PFEXPO"] [list iscritti-list "Iscritti"] "$page_title"]
 set form_name "iscritto"
 ad_form -name $form_name \
     -mode display \
@@ -46,6 +46,7 @@ set list_name "iscrizioni"
 template::list::create \
     -name $list_name \
     -multirow $list_name \
+    -actions [list "Aggiungi evento" [export_vars -base iscrizioni-gest {iscritto_id}] "Aggiungi evento all'iscritto"] \
     -key iscrizione_id \
     -caption "Situazione iscritto" \
     -elements {

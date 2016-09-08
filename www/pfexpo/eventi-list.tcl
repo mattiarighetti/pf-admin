@@ -6,8 +6,6 @@ ad_page_contract {
 }
 pf::user_must_admin
 set expo_id [pf::expo::id]
-template::head::add_css -href ../dashboard.css
-set admin_menu [pf::admin_menu "pfexpo"]
 set page_title "Eventi"
 set context [list [list /pfexpo "PFEXPO"] $page_title]
 set actions [list "Nuovo evento" eventi-gest "Aggiunge un nuovo evento."]

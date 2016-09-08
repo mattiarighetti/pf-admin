@@ -9,19 +9,27 @@ ad_page_contract {
     evento_id:integer,optional
 }
 pf::user_must_admin
-set page_title "Gestione PFEXPO - Iscritti"
-set context [list $page_title]
-set expo_id [db_string query "select expo_id from expo_edizioni where attivo is true"]
+set page_title "Iscritti"
+set context [list [list index "PFEXPO"] $page_title]
+if {![info exists expo_id]} {
+    if {[ad_get_cookie expo_id] != ""} {
+	set expo_id [ad_get_cookie expo_id]
+    } else {
+	set expo_id [db_string query "select expo_id from expo_edizioni order by data desc limit 1"]
+    }
+}
 set actions "{Nuovo} {iscritti-gest} {Crea un nuovo iscritto} {Esporta} {[export_vars -base iscritti-excel {expo_id}]} {Esporta un file Excel con gli iscritti al PFEXPO selezionato}"
 source [ah::package_root -package_key ah-util]/paging-buttons.tcl
 template::list::create \
     -name "iscritti" \
     -multirow "iscritti" \
-    -key iscritto_id \
     -actions $actions \
     -no_data "Nessun iscritto corrisponde ai criteri di ricerca impostati." \
     -row_pretty_plural "iscritti" \
     -elements {
+	iscritto_id {
+	    label "ID Iscritto"
+	}
 	nome {
 	    label "Nome"
 	}
@@ -61,7 +69,7 @@ template::list::create \
 	q {
             hide_p 1
             values {$q $q}
-            where_clause {p.nome ILIKE '%$q%' OR p.cognome ILIKE '%$q%' OR p.societa ILIKE '%$q%' OR p.email ILIKE '%$q%' OR p.iscritto_id::text ILIKE '%$q%'}
+            where_clause {p.nome||p.cognome||p.societa||p.email||p.iscritto_id ILIKE '%$q%'}
         }
 	rows_per_page {
 	    label "Righe"

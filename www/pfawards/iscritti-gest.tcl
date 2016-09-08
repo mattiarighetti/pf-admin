@@ -42,6 +42,7 @@ set list_name "iscrizioni"
 template::list::create \
     -name $list_name \
     -multirow $list_name \
+    -actions "{Aggiungi esame} {[export_vars -base iscritti-esami-gest {persona_id}]} {Aggiungi esami all'utente}" \
     -key esame_id \
     -caption "Esami a cui è iscritto" \
     -elements {
@@ -50,6 +51,9 @@ template::list::create \
 	}
 	denominazione {
 	    label "Categoria"
+	}
+	data_iscr {
+	    label "Data iscrizione"
 	}
 	decorrenza {
 	    label "Decorrenza"
@@ -67,6 +71,6 @@ template::list::create \
 db_multirow \
     -extend {
 	delete_url
-    } $list_name query "SELECT e.esame_id, c.titolo as denominazione, e.start_time, e.end_time, e.punti, e.scadenza, e.decorrenza FROM awards_esami e, awards_categorie c WHERE persona_id = :persona_id AND e.categoria_id = c.categoria_id " {
-	set delete_url [export_vars -base "iscrizioni-canc" {esame_id}]
+    } $list_name query "SELECT e.esame_id, c.titolo as denominazione, e.start_time, e.end_time, e.punti, e.scadenza, e.decorrenza, e.data_iscr FROM awards_esami e, awards_categorie c WHERE persona_id = :persona_id AND e.categoria_id = c.categoria_id " {
+	set delete_url [export_vars -base "iscritti-esami-canc" {esame_id persona_id}]
     }

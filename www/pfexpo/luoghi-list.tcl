@@ -3,9 +3,9 @@ ad_page_contract {
     @creation-date Friday 29 May 2015
 } {
     orderby:optional
-    luogo_id:integer
 }
-set page_title "Sale - "
+set page_title "Luoghi"
+set context [list [list index "PFEXPO"] $page_title]
 if {![info exists expo_id]} {
     if {[ad_get_cookie expo_id] != ""} {
         set expo_id [ad_get_cookie expo_id]
@@ -13,35 +13,42 @@ if {![info exists expo_id]} {
         set expo_id [db_0or1row query "select * from expo_edizioni where attivo is true limit 1"]
     }
 }
-append page_title [db_string query "select l.denominazione from expo_luoghi l where :luogo_id = l.luogo_id"]
-set context [list [list index "PFEXPO"] [list luoghi-list "Luoghi"] $page_title]
-set actions "{Nuova sala} {sale-gest?luogo_id=$luogo_id} {Aggiunge una nuova sala}"
+set actions "{Nuovo} {luoghi-gest} {Aggiunge un nuovo luogo}"
 template::list::create \
-    -name sale \
-    -multirow sale \
+    -name luoghi \
+    -multirow luoghi \
     -actions $actions \
     -elements {	
 	denominazione {
 	    label "Denominazione"
 	}
+	sale {
+	    label "Sale"
+	    link_url_col sale_url
+	    display_template {<img src="http://images.professionefinanza.com/icons/view.gif" height="12" border="0">}
+	    link_html {title "Vai al dettaglio sale"}
+	    sub_class narrow
+	}
 	edit {
 	    link_url_col edit_url
 	    display_template {<img src="http://images.professionefinanza.com/icons/edit.gif" height="12" border="0">}
-	    link_html {title "Modifica sala."}
+	    link_html {title "Modifica luogo"}
 	    sub_class narrow
 	}
    	delete {
 	    link_url_col delete_url 
 	    display_template {<img src="http://images.professionefinanza.com/icons/delete.gif" height="12" border="0">}
-	    link_html {title "Cancella sala." onClick "return(confirm('Sei davvero sicuro di voler cancellare la sala?'));"}
+	    link_html {title "Cancella luogo" onClick "return(confirm('Sei davvero sicuro di voler cancellare questo luogo?'));"}
 	    sub_class narrow
 	}
 }
 db_multirow \
     -extend {
+	sale_url
 	edit_url
 	delete_url
-    } sale query "select s.sala_id, s.denominazione from expo_sale s where s.luogo_id = :luogo_id order by sala_id" {
-	set edit_url [export_vars -base "sale-gest" {luogo_id sala_id}]
-	set delete_url [export_vars -base "sale-canc" {luogo_id sala_id}]
+    } luoghi query "select luogo_id, denominazione from expo_luoghi" {
+	set sale_url [export_vars -base "sale-list" {luogo_id}]
+	set edit_url [export_vars -base "luoghi-gest" {luogo_id}]
+	set delete_url [export_vars -base "luoghi-canc" {luogo_id}]
     }

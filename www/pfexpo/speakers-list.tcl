@@ -7,8 +7,6 @@ ad_page_contract {
 pf::user_must_admin
 set page_title "Speakers"
 set context [list [list /pfexpo "PFEXPO"] $page_title]
-template::head::add_css -href ../dashboard.css
-set admin_menu [pf::admin_menu "pfexpo"]
 set actions "{Nuovo speaker} {speakers-gest} {Aggiunge un nuovo speaker}"
 template::list::create \
     -name relatori \

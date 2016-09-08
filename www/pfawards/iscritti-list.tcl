@@ -14,9 +14,8 @@ set award_id [db_string query "select award_id from awards_edizioni where attivo
 set actions "{Nuovo} {iscritti-gest} {Crea un nuovo iscritto} {Esporta} {[export_vars -base iscritti-excel {award_id}]} {Esporta un file Excel con gli iscritti ai PFAwards selezionati}"
 source [ah::package_root -package_key ah-util]/paging-buttons.tcl
 template::list::create \
-    -name "iscritti" \
-    -multirow "iscritti" \
-    -key persona_id \
+    -name iscritti \
+    -multirow iscritti \
     -actions $actions \
     -no_data "Nessun iscritto corrisponde ai criteri di ricerca impostati." \
     -row_pretty_plural "iscritti" \
@@ -39,12 +38,18 @@ template::list::create \
 	    link_html {title "Apri scheda"}
 	    sub_class narrow
 	}
+	delete {
+	    link_url_col delete_url
+	    display_template "<img src=\"http://images.professionefinanza.com/icons/delete.gif\" height=\"12px\" border=\"0\">"
+	    link_html {title "Elimina iscrizioni ai PFAwards"}
+	    sub_class narrow
+	}
     } \
     -filters {
 	q {
-            hide_p 1
-            values {$q $q}
-            where_clause {p.nome ILIKE '%$q%' OR p.cognome ILIKE '%$q%'}
+	    hide_p 1
+	    values {$q $q}
+            where_clause {p.nome||p.cognome ILIKE '%$q%'}
         }
 	rows_per_page {
 	    label "Righe"
@@ -65,6 +70,8 @@ template::list::create \
 db_multirow \
     -extend {
 	view_url
-    } iscritti query "SELECT p.persona_id, INITCAP(LOWER(p.nome)) AS nome, INITCAP(LOWER(p.cognome)) AS cognome, pa.email FROM crm_persone p, awards_esami e, parties pa WHERE pa.party_id = p.user_id AND e.award_id = :award_id AND e.persona_id = p.persona_id GROUP BY p.persona_id, p.nome, p.cognome, pa.email [template::list::orderby_clause -name iscritti -orderby] LIMIT $rows_per_page OFFSET $offset" {
+	delete_url
+    } iscritti query "SELECT p.persona_id, INITCAP(LOWER(p.nome)) AS nome, INITCAP(LOWER(p.cognome)) AS cognome, pa.email FROM crm_persone p, awards_esami e, parties pa WHERE pa.party_id = p.user_id AND e.award_id = :award_id AND e.persona_id = p.persona_id [template::list::filter_where_clauses -name iscritti -and] GROUP BY p.persona_id, p.nome, p.cognome, pa.email [template::list::orderby_clause -name iscritti -orderby] LIMIT $rows_per_page OFFSET $offset" {
 	set view_url [export_vars -base "iscritti-gest" {persona_id}]
+	set delete_url [export_vars -base "iscritti-canc" {persona_id}]
     }

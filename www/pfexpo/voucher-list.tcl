@@ -6,8 +6,6 @@ ad_page_contract {
     orderby:optional
 }
 pf::user_must_admin
-template::head::add_css -href ../dashboard.css
-set admin_menu [pf::admin_menu "pfexpo"]
 set page_title "Voucher"
 set context [list [list /pfexpo "PFEXPO"] $page_title]
 if {![info exist expo_id]} {

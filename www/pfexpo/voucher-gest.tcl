@@ -6,19 +6,13 @@ ad_page_contract {
     voucher_id:integer,optional
 }
 pf::user_must_admin
-template::head::add_css -href ../dashboard.css
-template::head::add_css -href http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css
-template::head::add_javascript -src http://code.jquery.com/jquery-1.9.1.min.js
-template::head::add_css -href "http://images.professionefinanza.com/js/summernote/summernote.css" 
-template::head::add_javascript -src "http://images.professionefinanza.com/js/summernote/summernote.js"
-set admin_menu [pf::admin_menu "pfexpo"]
 set expo_id [db_string query "select expo_id from expo_edizioni where attivo is true"]
 if {[ad_form_new_p -key voucher_id]} {
-    set page_title "Nuovo"
+    set page_title "Nuovo voucher"
     set context [list [list /pfexpo/ "PFEXPO"] [list voucher-list "Voucher"] $page_title]
     set buttons [list [list "Crea voucher" new]]
 } else {
-    set page_title "Modifica"
+    set page_title "Modifica voucher"
     set context [list [list /pfexpo/ "PFEXPO"] [list voucher-list "Voucher"] $page_title]
     set buttons [list [list "Modifica voucher" edit]]
 }
@@ -64,5 +58,3 @@ ad_form -name voucher \
 	ad_returnredirect "voucher-list"
 	ad_script_abort
     }
-
-

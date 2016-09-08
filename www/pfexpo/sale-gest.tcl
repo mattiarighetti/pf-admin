@@ -2,17 +2,18 @@ ad_page_contract {
     @author Mattia Righetti (mattia.righetti@professionefinanza.com)
     @creation-date Friday 29 May 2015
 } {
-    expo_id:integer
+    luogo_id:integer
     sala_id:integer,optional
 }
-if {[ad_form_new_p -key docente_id]} {
+if {[ad_form_new_p -key sala_id]} {
     set page_title "Nuova sala"
     set buttons [list [list "Aggiungi" new]]
 } else {
     set page_title "Modifica sala"
     set buttons [list [list "Modifica" edit]]
 }
-set context ""
+set luogo [db_string query "select denominazione from expo_luoghi where luogo_id = :luogo_id"]
+set context [list [list index "PFEXPO"] [list luoghi-list "Luoghi"] [list [export_vars -base "sale-list" {luogo_id}] "Sale - $luogo"] $page_title]
 ad_form -name sala \
     -edit_buttons $buttons \
     -has_edit 1 \
@@ -22,17 +23,18 @@ ad_form -name sala \
 	    {label "Denominazione"}
 	    {html {size 70 maxlength 100}}
 	}
-    } -select_query {
-	"select sala_id, denominazione from expo_sale where sala_id = :sala_id"
-    } -new_data {
-	db_transaction {
-	    set sala_id [db_string query "select coalesce(max(sala_id)+1,1) FROM expo_sale"]	    
-	    set luogo_id [db_string query "select l.luogo_id from expo_luoghi l, expo_edizioni e where l.luogo_id = e.luogo_id and e.expo_id = :expo_id"]
-	    db_dml query "insert into expo_sale (sala_id, denominazione, luogo_id) VALUES (:sala_id, :denominazione, :luogo_id)"    
+	{capienza:text
+	    {label "Capienza"}
+	    {html {size 70 maxlength 3}}
 	}
+    } -select_query {
+	"select sala_id, denominazione, capienza from expo_sale where sala_id = :sala_id"
+    } -new_data {
+	set sala_id [db_string query "select coalesce(max(sala_id)+1,1) FROM expo_sale"]	    
+	db_dml query "insert into expo_sale (sala_id, denominazione, capienza, luogo_id) VALUES (:sala_id, :denominazione, :capienza, :luogo_id)"    
     } -edit_data {
-	    db_dml query "update expo_sale set sala_id = :sala_id, denominazione = :denominazione where professionista_id = :professionista_id"
+	db_dml query "update expo_sale set denominazione = :denominazione, capienza = :capienza where sala_id = :sala_id"
     } -after_submit {
-	ad_returnredirect "index?module=pfexpo&expo_id=:expo_id&template=modules%2Fpfexpo%2Fsale-list"
+	ad_returnredirect [export_vars -base "sale-list" {luogo_id}]
 	ad_script_abort
     }

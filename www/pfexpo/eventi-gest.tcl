@@ -5,19 +5,13 @@ ad_page_contract {
     evento_id:integer,optional
 }
 pf::user_must_admin
-template::head::add_css -href ../dashboard.css
-template::head::add_css -href http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css
-template::head::add_javascript -src http://code.jquery.com/jquery-1.9.1.min.js
-template::head::add_css -href "http://images.professionefinanza.com/js/summernote/summernote.css" 
-template::head::add_javascript -src "http://images.professionefinanza.com/js/summernote/summernote.js"
-set admin_menu [pf::admin_menu "pfexpo"]
 set expo_id [pf::expo::id]
 if {[ad_form_new_p -key evento_id]} {
-    set page_title "Nuovo"
+    set page_title "Nuovo evento"
     set context [list [list /pfexpo/ "PFEXPO"] [list eventi-list "Eventi"] $page_title]
     set buttons [list [list "Crea evento" new]]
 } else {
-    set page_title "Modifica"
+    set page_title "Modifica evento"
     set context [list [list /pfexpo/ "PFEXPO"] [list eventi-list "Eventi"] $page_title]
     set buttons [list [list "Modifica evento" edit]]
 }
