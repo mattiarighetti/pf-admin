@@ -1,0 +1,31 @@
+ad_page_contract {  
+    @author Mattia Righetti (mattia.righetti@professionefinanza.com)
+    @creation-date Thursday 12 February 2015
+} {
+    {q ""}
+}
+set page_title "Registrazione PFEXPO 2015 Roma"
+set context ""
+set focus "q"
+template::head::add_javascript -src "DYMO.label.framework.js" -charset "UTF-8"
+template::head::add_javascript -src "dymo.js" -charset "UTF-8"
+ad_form -name "cerca" \
+    -mode edit \
+    -form {
+	{q:text(text)
+	    {label "Ricerca"}
+	    {value $q}
+	}
+    } -on_submit {
+	ad_returnredirect "?q=$q"
+    }
+ad_return_template
+if {$q ne ""} {
+    set table_html "<table class=\"table table-hover\"><tr><th>Nome e cognome</th><th>Email</th><th>Telefono</th><th>&nbsp;</th><th>&nbsp;</th></tr>"
+    db_foreach query "select initcap(lower(nome)) as nome, initcap(lower(cognome)) as cognome, iscritto_id, email, telefono, barcode, case when pagato is true then 1 else 0 end as paid from expo_iscritti where expo_id = 2 and (cognome ilike '%$q%' or nome ilike '%$q%' or telefono ilike '%$q%' or email ilike '%$q%' or nome||cognome ilike '%$q%' or cognome||nome ilike '%$q%' or barcode ilike '%$q%')" {
+	append table_html "<tr><td>$nome $cognome</td><td>$email</td><td>$telefono</td><td><a href=\"iscrizioni-list?iscritto_id=$iscritto_id\" class=\"btn btn-info\"><span class=\"glyphicon glyphicon-th-list\"></span></a></td><td><center><button id=\"print\" class=\"btn btn-success\" onClick=\"printBadge('$barcode','[string map {' &rsquo;} $nome]','[string map {' &rsquo;} $cognome]', '$paid')\"><span class=\"glyphicon glyphicon-print\"></span></button></td></tr>"
+    }
+    append table_html "</table>"
+} else {
+    set table_html ""
+}

@@ -1,0 +1,13 @@
+ad_page_contract {
+    Programma per l'inserimento di codici barcode senza checksum (perché il Dymo non la vuole)
+}
+db_foreach query "select iscritto_id from expo_iscritti where barcode is null or barcode = ''" {
+    set barcode "8030000"
+    if {[string length $iscritto_id] == 4} {
+	append barcode 0
+    }
+    append barcode $iscritto_id
+    db_dml query "update expo_iscritti set barcode = :barcode where iscritto_id = :iscritto_id"
+}
+ad_returnredirect index
+ad_script_abort

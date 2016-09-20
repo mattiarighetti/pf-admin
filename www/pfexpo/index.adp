@@ -26,7 +26,8 @@
 	  <li><a href="edizioni-partners-list">Partners</a></li>
 	  <li><a href="voucher-list">Voucher</a></li>
 	  <li><a href="partecipati-list">Presenze</a></li>
-	  </ul>
+	  <li><a href="front-desk">Front desk</a></li>
+	    </ul>
       </td>
 	<td>
 	  <big>

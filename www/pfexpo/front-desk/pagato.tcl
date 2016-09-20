@@ -1,0 +1,13 @@
+ad_page_contract {  
+    @author Mattia Righetti (mattia.righetti@professionefinanza.com)
+    @creation-date Thursday 12 February 2015
+} {
+    iscritto_id:integer
+}
+with_catch errmsg {
+    db_dml query "update expo_iscritti set pagato = true where iscritto_id = :iscritto_id"
+} {
+    ad_return_complaint 1 "Errore nella registrazione di effettuato pagamento. L'errore riportato dal database è il seguente:<br></br><code>$errmsg</code>"
+}
+ad_returnredirect [export_vars -base "iscrizioni-list" {iscritto_id}]
+ad_script_abort
