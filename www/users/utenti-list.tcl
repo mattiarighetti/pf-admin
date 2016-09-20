@@ -1,0 +1,84 @@
+ad_page_contract {
+    @author Mattia Righetti (mattia.righetti@professionefinanza.com)
+    @creation-date Tuesday 13 September 2016
+} {
+    {rows_per_page 50}
+    {offset 0}
+    {q ""}
+    orderby:optional
+}
+pf::user_must_admin
+set page_title "Utenti"
+set context [list $page_title]
+set actions "{Nuovo} {utenti-gest} {Apri nuova utenza}"
+source [ah::package_root -package_key ah-util]/paging-buttons.tcl
+template::list::create \
+    -name utenti \
+    -multirow utenti \
+    -actions $actions \
+    -no_data "Nessun utente corrisponde ai criteri di ricerca impostati." \
+    -row_pretty_plural "utenti" \
+    -elements {
+	user_id {
+	    label "Codice utente"
+	}
+	first_names {
+	    label "Nome"
+	}
+	last_name {
+	    label "Cognome"
+	}
+	email {
+	    label "Email"
+	}
+	view {
+	    link_url_col view_url
+	    display_template "<img src=\"http://images.professionefinanza.com/icons/view.gif\" height=\"12px\" border=\"0\">"
+	    link_html {title "Apri scheda"}
+	    sub_class narrow
+	}
+	password {
+	    link_url_col password_url
+	    display_template "Cambia password"
+	    link_html {title "Aggiorna password utente"}
+	    sub_class narrow
+	}
+	delete {
+	    link_url_col delete_url
+	    display_template "<img src=\"http://images.professionefinanza.com/icons/delete.gif\" height=\"12px\" border=\"0\">"
+	    link_html {title "Elimina utente"}
+	    sub_class narrow
+	}
+    } \
+    -filters {
+	q {
+	    hide_p 1
+	    values {$q $q}
+            where_clause {p.first_names||' '||p.last_name||' '||pa.email ILIKE '%$q%'}
+        }
+	rows_per_page {
+	    label "Righe"
+	    values {{Cinquanta 50} {Cento 100} {Duecentocinquanta 250}}
+	    where_clause {1 = 1}
+	    default_value 50
+	}
+    } -orderby {
+	first_names {
+	    label "Nome"
+	    orderby p.first_names
+	}
+	last_name {
+	    label "Cognome"
+	    orderby p.last_name
+	}
+    }
+db_multirow \
+    -extend {
+	view_url
+	password_url
+	delete_url
+    } utenti query "SELECT u.user_id, INITCAP(LOWER(p.first_names)) AS first_names, INITCAP(LOWER(p.last_name)) AS last_name, LOWER(pa.email) AS email FROM persons p, parties pa, users u WHERE pa.party_id = u.user_id AND p.person_id = u.user_id AND user_id <> 0 [template::list::filter_where_clauses -name utenti -and] [template::list::orderby_clause -name utenti -orderby] LIMIT $rows_per_page OFFSET $offset" {
+	set view_url [export_vars -base "utenti-gest" {user_id}]
+	set password_url [export_vars -base "utenti-password-gest" {user_id}]
+	set delete_url [export_vars -base "utenti-canc" {user_id}]
+    }

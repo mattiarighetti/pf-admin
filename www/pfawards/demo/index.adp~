@@ -1,0 +1,24 @@
+<master>
+  <property name="page_title">@page_title;noquote@</property>	
+  <property name="context">@context;noquote@</property>
+
+  <h1>PFAwards</h1>
+  <hr />
+  <ul class="list-group">
+    <li class="list-group-item">Totale iscritti: <span class="badge">@tot_iscritti@</span></li>
+		  </ul>
+  <table align="center" border="0" width="100%">
+      <tr>
+	<td width="50%" valign="top">
+	  <center>
+	    <ul class="list-group">
+	      <li class="list-group-item disabled>MENU</li>
+	      <li class="list-group-item"><a class="butto button-primary" href="iscritti-list">Iscritti</a></li>
+	      <li class="list-group-item"><a class="button button-primary" href="promuovi-cat">Promuovi</a></li>
+	      <li class="list-group-item"><a class="button button-primary" href="demo">Demo</a></li>
+			  </ul>
+			</center>
+			</td>
+		    </tr>
+		</table>
+    

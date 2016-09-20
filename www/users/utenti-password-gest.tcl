@@ -1,0 +1,32 @@
+ad_page_contract {
+    @author Mattia Righetti (mattia.righetti@professionefinanza.com)
+    @creation-date Friday 12 November, 2014
+} {
+    user_id:integer
+}
+pf::user_must_admin
+set page_title "Cambio password - "
+append page_title [db_string query "select p.first_names||' '||p.last_name from persons p, users u where p.person_id = u.user_id and u.user_id = :user_id"]
+set context [list [list utenti-list {Utenti}] "$page_title"]
+ad_form -name password \
+    -export "user_id" \
+    -form {
+	{password:text
+            {label "Password"}
+            {html {size 50}}
+        }
+        {confirm_password:text
+            {label "Conferma password"}
+            {html {size 50}}
+        }
+    } -validate {
+	{confirm_password
+         {$confirm_password eq $password}
+         "Le password non corrispondono."
+        }
+    } -on_submit {
+	ad_change_password $user_id $password
+    } -after_submit {
+	ad_returnredirect utenti-list
+	ad_script_abort
+    }
