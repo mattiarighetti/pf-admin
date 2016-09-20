@@ -2,12 +2,16 @@ ad_page_contract {
     @author Mattia Righetti (mattia.righetti@professionefinanza.com)
     @creation-date 23 December 2014
 } {
-    expo_id:naturalnum
     orderby:optional
 }
 pf::user_must_admin
-set page_title "Partners"
-set admin_menu [pf::admin_menu "pfexpo"]
+if {[ad_get_cookie expo_id] ne ""} {
+    set expo_id [ad_get_cookie expo_id]
+} else {
+    ad_return_complaint 1 "Nessuna edizione del PFEXPO selezionata per questa funzione. <a href=\"/pfexpo\">Torna indietro per selezionarne una.</a>"
+}   
+set page_title "Partners PFEXPO "
+append page_title [db_string query "select to_char(data, 'YYYY') from expo_edizioni where expo_id = :expo_id"] " - " [db_string query "select c.denominazione from comuni c, expo_luoghi l, expo_edizioni e where e.expo_id = :expo_id and e.luogo_id = l.luogo_id and c.comune_id = l.comune_id"]
 set context [list [list / "PFEXPO"] $page_title]
 set actions "{Attiva partner} {[export_vars -base edizioni-partners-gest {expo_id}]} {Aggiunge un partner esistente al PFEXPO}"
 template::list::create \

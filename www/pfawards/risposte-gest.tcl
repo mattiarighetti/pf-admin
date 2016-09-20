@@ -2,49 +2,40 @@ ad_page_contract {
     @author Mattia Righetti (mattia.righetti@mail.polimi.it)
     @creation-date Monday 3 November, 2014
 } {
-    risposta_id:integer,optional
     domanda_id:integer
+    risposta_id:integer,optional
 }
-set user_id [ad_conn user_id]
-set user_admin [db_0or1row query "SELECT * FROM pf_iscritti WHERE iscritto_id = :user_id"]
-if {$user_id == 0 || $user_admin == 1} {
-    ad_returnredirect "login?return_url=/pfawards/"
-}
+pf::user_must_admin
 if {[ad_form_new_p -key risposta_id]} {
-    set page_title "Nuova"
+    set page_title "Nuova risposta"
     set buttons [list [list "Salva" new]]
 } else {
-    set page_title "Modifica #" 
+    set page_title "Modifica risposta #" 
     append page_title "$risposta_id"
     set buttons [list [list "Aggiorna" edit]]
 }
-ad_form -name risposte \
+set context [list [list index "PFAwards"] [list domande-list "Domande"] [list [export_vars -base "risposte-list" {domanda_id}] "Risposte quesito #$domanda_id"] $page_title]
+ad_form -name risposta \
     -edit_buttons $buttons \
-    -has_edit 1 \
     -export {domanda_id} \
+    -has_edit 1 \
     -form {
 	risposta_id:key
 	{corpo:text(textarea),nospell
-	    {label "Corpo"}
+	    {label "Risposta"}
 	    {html {rows 6 cols 50 wrap soft}}
 	}
 	{punti:text
-            {label "Punti"}
-	    {html {size 70 maxlenght 2}}
-	}
+	    {label "Punti"}
+	}	     
     } -select_query {
-	"SELECT corpo, punti FROM pf_risposte WHERE risposta_id = :risposta_id"
+	"SELECT testo, punti FROM awards_risposte WHERE risposta_id = :risposta_id"
     } -new_data {
-	set risposta_id [db_string query "SELECT COALESCE (MAX(risposta_id) + 1, 1) FROM pf_risposte"]
-	db_dml query "INSERT INTO pf_risposte (risposta_id, corpo, punti, domanda_id) VALUES (:risposta_id, :corpo, :punti, :domanda_id)"
+	set risposta_id [db_string query "SELECT COALESCE (MAX(risposta_id) + 1, 1) FROM awards_risposte"]
+	db_dml query "INSERT INTO awards_risposte (risposta_id, testo, domanda_id, punti) VALUES (:risposta_id, :corpo, :domanda_id, :punti)"
     } -edit_data {
-	db_dml query "UPDATE pf_risposte SET corpo = :corpo, punti = :punti WHERE risposta_id = :risposta_id"
-    } -on_submit {
-	set ctr_errori 0
-	if {$ctr_errori > 0} {
-	    break
-	}
+	db_dml query "UPDATE awards_risposte SET testo = :corpo, punti = :punti WHERE risposta_id = :risposta_id"
     } -after_submit {
-	ad_returnredirect "risposte-list?domanda_id=$domanda_id"
+	ad_returnredirect [export_vars -base "risposte-list" {domanda_id}]
 	ad_script_abort
     }

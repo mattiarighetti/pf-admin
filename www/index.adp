@@ -29,16 +29,24 @@
 	      <li><a href="pfawards/iscritti-list">Iscritti</a></li>
             </if>
 	    <li><a href="pfawards/edizioni-list">Edizioni</a></li>
-	  </ul>
+	    <li><a href="pfawards/demo">Demo</a></li>
+	    </ul>
 	</td>
       </tr>
       <tr>
 	<td>
-	  <h2><a href="docenti">Docenti</a></h2>
+	  <h2><a href="docenti/docenti-list">Docenti</a></h2>
 	  <ul>
 	    <li>Totale docenti: <b>@docenti_tot@</b></li>
 	    <li><a href="docenti/docenti-list">Elenco</a></li>
 	  </ul>
 	</td>
-      </tr>
+	<td>
+	  <h2><a href="users/utenti-list">Utenti</a></h2>
+	  <ul>
+	    <li>Totale utenti: <b>@utenti_tot@</b></li>
+	    <li><a href="users/utenti-list">Elenco</a></li>
+	  </ul>
+	  </td>
+	</tr>
     </table>

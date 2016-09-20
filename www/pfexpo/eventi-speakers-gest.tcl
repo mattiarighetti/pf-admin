@@ -5,14 +5,10 @@ ad_page_contract {
     evento_id:integer
 }
 pf::user_must_admin
-template::head::add_css -href ../dashboard.css
-template::head::add_css -href http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css
-template::head::add_javascript -src http://code.jquery.com/jquery-1.9.1.min.js
-template::head::add_css -href "http://images.professionefinanza.com/js/summernote/summernote.css" 
-template::head::add_javascript -src "http://images.professionefinanza.com/js/summernote/summernote.js"
-set page_title "Inserimento speaker evento"
-set admin_menu [pf::admin_menu "pfexpo"]
-set context [list [list /pfexpo/ "PFEXPO"] [list eventi-list "Eventi"] $page_title]
+set page_title "Nuovo speaker per "
+set evento [db_string query "select denominazione from expo_eventi where evento_id = :evento_id"]
+append page_title $evento
+set context [list [list index "PFEXPO"] [list eventi-list "Eventi"] [list [export_vars -base "eventi-speakers-list" {evento_id}] "Speakers di $evento"] $page_title]
 set buttons [list [list "Aggiungi" new]]
 ad_form -name evento \
     -edit_buttons $buttons \

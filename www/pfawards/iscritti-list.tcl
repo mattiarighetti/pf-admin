@@ -8,10 +8,10 @@ ad_page_contract {
     orderby:optional
 }
 pf::user_must_admin
-set page_title "Gestione PFAwards - Iscritti"
-set context [list $page_title]
+set page_title "Iscritti"
+set context [list [list index "PFAwards"] $page_title]
 set award_id [db_string query "select award_id from awards_edizioni where attivo is true limit 1"]
-set actions "{Nuovo} {iscritti-gest} {Crea un nuovo iscritto} {Esporta} {[export_vars -base iscritti-excel {award_id}]} {Esporta un file Excel con gli iscritti ai PFAwards selezionati}"
+set actions "{Nuovo} {iscritti-new} {Crea un nuovo iscritto} {Esporta} {[export_vars -base iscritti-excel {award_id}]} {Esporta un file Excel con gli iscritti ai PFAwards selezionati}"
 source [ah::package_root -package_key ah-util]/paging-buttons.tcl
 template::list::create \
     -name iscritti \

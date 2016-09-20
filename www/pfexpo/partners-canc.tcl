@@ -23,5 +23,5 @@ with_catch errmsg {
     ad_return_complaint 1 "<b>Attenzione: non è stato possibile cancellare il partner, probabilmente è ancora referenziato da qualche altra tabella.</b><br>L'errore riportato dal database è il seguente.<br><br><code$errmsg</code>"
     return
 }
-ad_returnredirect [export_vars -base "?template=modules%2Fpfexpo%2Fpartners-list" {expo_id module}]
+ad_returnredirect "partners-list"
 ad_script_abort

@@ -1,75 +1,46 @@
 ad_page_contract {
-    @author Mattia Righetti (mattia.righetti@mail.polimi.it)
-    @creation-date Tuesday 28 October, 2014
+    @author Mattia Righetti (mattia.righetti@professionefinanza.com)
+    @creation-date Wednesday, 9 December 2015
 } {
-    {rows_per_page 30}
-    {offset 0}
-    domanda_id:integer
+    domanda_id
 }
-set user_id [ad_conn user_id]
-set user_admin [db_0or1row query "SELECT * FROM pf_iscritti WHERE iscritto_id = :user_id"]
-if {$user_id == 0 || $user_admin == 1} {
-    ad_returnredirect "login?return_url=/pfawards/"
-}
-set page_title "Risposte alla #"
-append page_title "$domanda_id"
-set add_link "risposte-gest?domanda_id="
-append add_link "$domanda_id"
-set actions {"Aggiungi" risposte-gest?domanda_id= "Aggiunge una nuova risposta."}
-source [ah::package_root -package_key ah-util]/paging-buttons.tcl
+pf::user_must_admin
+set page_title "Risposte quesito #"
+append page_title $domanda_id
+set context [list [list index "PFAwards"] [list domande-list "Domande"] $page_title]
+set actions "{Nuova} {[export_vars -base risposte-gest {domanda_id}]} {Aggiungi risposte}"
 template::list::create \
     -name risposte \
     -multirow risposte \
     -actions $actions \
     -elements {
-	numero {
-	    label "Numero"
+	risposta_id {
+	    label "ID risposta"
 	}
-	corpo {
-	    label "Corpo"
+	testo {
+	    label "Testo"
 	}
 	punti {
 	    label "Punti"
 	}
-        edit {
-            link_url_col edit_url
-            display_template {<img src="images/icona-edit.ico" width="20px" height="20px" border="0">}
-            link_html {title "Modifica risposta." width="20px"}
-            sub_class narrow
-        }
-   	delete {
-	    link_url_col delete_url 
-	    display_template {<img src="images/icona-delete.ico" width="20px" height="20px" border="0">}
-	    link_html {title "Cancella risposta." onClick "return(confirm('Vuoi davvero cancellare la domanda?'));" width="20px"}
+	edit {
+	    link_url_col edit_url
+	    display_template "<img src=\"http://images.professionefinanza.com/icons/edit.gif\" height=\"12px\" border=\"0\">"
+	    link_html {title "Apri dettaglio"}
 	    sub_class narrow
 	}
-    } \
-    -filters {
-	rows_per_page {
-	    label "Righe"
-	    values {{Quindici 15} {Trenta 30} {Cinquanta 50}}
-	    where_clause {1 = 1}
-	    default_value 50
+	delete {
+	    link_url_col delete_url
+	    display_template "<img src=\"http://images.professionefinanza.com/icons/delete.gif\" height=\"12px\" border=\"0\">"
+	    link_html {title "Elimina"}
+	    sub_class narrow
 	}
-    } \
-    -orderby {
-	default_value punti
-	punti {
-	    label "Punti"
-	    orderby_desc punti
-	}
-    }
+    } 
 db_multirow \
     -extend {
 	edit_url
-	delete_url 
-    } risposte query "SELECT '#'||risposta_id AS numero, corpo, punti, risposta_id
-                       FROM pf_risposte
-                      WHERE domanda_id = :domanda_id
-                            [template::list::filter_where_clauses -name risposte -and]
-                            [template::list::orderby_clause -name risposte -orderby]
-                      LIMIT $rows_per_page
-                     OFFSET $offset" {
-			 set edit_url [export_vars -base "risposte-gest" {domanda_id risposta_id}]
-			 set delete_url [export_vars -base "risposte-canc" {risposta_id}]
-		       }
+	delete_url
+    } risposte query "SELECT testo, risposta_id, punti from awards_risposte where domanda_id = :domanda_id" {
+	set edit_url [export_vars -base "risposte-gest" {risposta_id domanda_id}]
+	set delete_url [export_vars -base "risposte-canc" {risposta_id}]
+    }

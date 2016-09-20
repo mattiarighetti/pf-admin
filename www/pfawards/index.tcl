@@ -3,10 +3,31 @@ ad_page_contract {
     @creation-date Wednesday 14 October 2015
 }
 pf::user_must_admin
-set page_title "PFAwards - ProfessioneFinanza"
+set page_title "PFAwards"
 set context [list $page_title]
-set dash_menu [pf::admin_menu "pfawards"]
-set award_id [db_string query "select award_id from awards_edizioni where attivo is true"]
+if {![info exists award_id]} {
+    if {[ad_get_cookie award_id] != ""} {
+	set award_id [ad_get_cookie award_id]
+    } else {
+	if {[db_0or1row query "select * from awards_edizioni where attivo is true limit 1"]} {
+	    set award_id [db_string query "select award_id from awards_edizioni where attivo is true limit 1"]
+	} else {
+	    set award_id [db_string query "select award_id from awards_edizioni order by anno desc limit 1"]
+	}
+	ad_set_cookie award_id $award_id
+    }
+}
+ad_form -name edizione \
+    -mode edit \
+    -html {class "form-inline"} \
+    -form {
+	{award_id:integer(select)
+	    {options {[db_list_of_lists query "select anno, award_id from awards_edizioni order by award_id desc"]}}
+	    {html {class "form-control" onChange "this.form.submit()"}}
+	    {value $award_id}
+	}
+    } -on_submit {
+	ad_set_cookie award_id $award_id
+    }
 set tot_iscritti [db_string query "select count(distinct(persona_id)) from awards_esami where award_id = :award_id"]
-template::head::add_css -href /dashboard.css
 ad_return_template

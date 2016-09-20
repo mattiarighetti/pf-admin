@@ -2,7 +2,9 @@
     <property name="doc(title)">@page_title;noquote@</property>
     <property name="context">@context;noquote@</property>
     
-      <table> 
+    <h1>@page_title@</h1>
+    <hr />
+    <table> 
 	<tr> 	 
 	  <td class="list-filter-pane" width="240px" valign="top">
 	    <form action="@base_url@">	 

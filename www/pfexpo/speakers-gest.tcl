@@ -47,6 +47,8 @@ ad_form -name relatore \
     } -select_query {
 	"SELECT speaker_id, short_cv, 'http://images.professionefinanza.com/pfexpo/speakers_portraits/'||immagine AS upload_file, nome, cognome, partner_id FROM expo_speakers WHERE speaker_id = :speaker_id"
     } -new_data {
+	set permalink [string tolower [string map {" " ""} $nome]]
+	append permalink "-" [string tolower [string map {" " ""} $cognome]]
 	if {$upload_file ne ""} {
 	    db_transaction {
 		set speaker_id [db_string query "SELECT COALESCE(MAX(speaker_id)+1,1) FROM expo_speakers"]	    
@@ -59,10 +61,10 @@ ad_form -name relatore \
 		    append file_name "_" $nome ".png"
 		}
 		ns_rename $filepath /usr/share/openacs/packages/images/www/pfexpo/speakers_portraits/$file_name
-		db_dml query "INSERT INTO expo_speakers (speaker_id, nome, cognome, short_cv, immagine, partner_id) VALUES (:speaker_id, :nome, :cognome, :short_cv, :file_name, :partner_id)"
+		db_dml query "INSERT INTO expo_speakers (speaker_id, nome, cognome, short_cv, immagine, partner_id, permalink) VALUES (:speaker_id, :nome, :cognome, :short_cv, :file_name, :partner_id, :permalink)"
 	    }
 	} else {
-	    db_dml query "INSERT INTO expo_speakers (speaker_id, nome, cognome, short_cv, partner_id, immagine) VALUES (:speaker_id, :nome, :cognome, :short_cv, :partner_id, 'no-user.jpg')"
+	    db_dml query "INSERT INTO expo_speakers (speaker_id, nome, cognome, short_cv, partner_id, immagine, permalink) VALUES (:speaker_id, :nome, :cognome, :short_cv, :partner_id, 'no-user.jpg', :permalink)"
 	}
     } -edit_data {
     	if {$upload_file eq ""} {

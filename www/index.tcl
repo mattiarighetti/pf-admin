@@ -4,7 +4,7 @@ ad_page_contract {
 }
 pf::user_must_admin
 set page_title "Amministrazione - ProfessioneFinanza"
-set context [list "Amministrazione"]
+set context ""
 if {[db_0or1row query "select * from expo_edizioni where attivo is true limit 1"]} {
     set expo_id [db_string query "select expo_id from expo_edizioni where attivo is true limit 1"]
     set expo_iscr [db_string query "select count(distinct(email)) from expo_iscritti where expo_id = :expo_id"]
@@ -20,4 +20,5 @@ if {[db_0or1row query "select * from awards_edizioni where attivo is true limit 
     set awards_iscr ""
 }
 set docenti_tot [db_string query "select count(*) from docenti"]
+set utenti_tot [db_string query "select count(*) from users"]
 ad_return_template

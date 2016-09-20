@@ -6,8 +6,10 @@ ad_page_contract {
 } {
     expo_id:naturalnum
 }
-set page_title "Aggiunta partner"
-set context [list [list /pfexpo "PFEXPO"] [list edizioni-partners-list "Partners"] $page_title]
+set anno [db_string query "select to_char(data, 'YYYY') from expo_edizioni where expo_id = :expo_id"]
+set luogo [db_string query "select c.denominazione from comuni c, expo_luoghi l, expo_edizioni e where e.expo_id = :expo_id and e.luogo_id = l.luogo_id and l.comune_id = c.comune_id"]
+set page_title "Aggiunta partner $anno - $luogo"
+set context [list [list /pfexpo "PFEXPO"] [list edizioni-partners-list "Partners PFEXPO $anno - $luogo"] $page_title]
 set user_id [ad_conn user_id]
 set edizione [db_string query "select 'PFEXPO - '||c.denominazione||' '||to_char(e.data, 'YYYY') from expo_edizioni e, expo_luoghi l, comuni c where c.comune_id = l.comune_id and e.luogo_id = l.luogo_id and expo_id = :expo_id"]
 ad_form -name partner \

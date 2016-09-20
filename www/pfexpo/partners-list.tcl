@@ -6,9 +6,8 @@ ad_page_contract {
 }
 pf::user_must_admin
 set page_title "Partners"
-set admin_menu [pf::admin_menu "pfexpo"]
-set context [list [list / "PFEXPO"] $page_title]
-set actions "{Nuovo partner} {partners-gest} {Aggiunge un nuovo partner al DB.} {Attiva partner} {partners-edizioni} {Aggiunge un partner esistente al PFEXPO}"
+set context [list [list index "PFEXPO"] $page_title]
+set actions "{Nuovo partner} {partners-gest} {Aggiunge un nuovo partner al DB.} {Attiva partner} {edizioni-partners} {Aggiunge un partner esistente al PFEXPO}"
 template::list::create \
     -name partners \
     -multirow partners \

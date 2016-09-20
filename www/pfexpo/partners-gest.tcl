@@ -14,7 +14,7 @@ if {[ad_form_new_p -key partner_id]} {
     set page_title "Modifica partner"
     set buttons [list [list "Modifica" edit]]
 }
-set context [list [list partners-list "Partners"] $page_title]
+set context [list [list index "PFEXPO"] [list partners-list "Partners"] $page_title]
 set mime_types [parameter::get -parameter AcceptablePortraitMIMETypes -default ""]
 set max_bytes [parameter::get -parameter MaxPortraitBytes -default ""]
 ad_form -name partner \
@@ -92,6 +92,6 @@ ad_form -name partner \
     } -on_submit {
 	set filepath [ns_queryget upload_file.tmpfile]
     } -after_submit {
-	ad_returnredirect "docenti-list"
+	ad_returnredirect "partners-list"
 	ad_script_abort
     }

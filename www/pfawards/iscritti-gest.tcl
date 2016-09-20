@@ -4,10 +4,10 @@ ad_page_contract {
 } {
     persona_id:integer
 }
-set page_title "Situazione iscritto"
-set context [list [list / {Iscritti}] "$page_title"]
-set form_name "iscritto"
-ad_form -name $form_name \
+set page_title "Dettaglio"
+set context [list [list index "PFAwards"] [list iscritti-list "Iscritti"] $page_title]
+set user_id [db_string query "select user_id from crm_persone where persona_id = :persona_id"]
+ad_form -name iscritto \
     -mode display \
     -export "return_url" \
     -has_edit 0 \
@@ -38,14 +38,16 @@ ad_form -name $form_name \
     } -edit_data {
 	db_dml query "UPDATE crm_persone SET nome = INITCAP(LOWER(:nome)), cognome = INITCAP(LOWER(:cognome)), email = LOWER(:email), societa = INITCAP(LOWER(:societa)) WHERE persona_id = :persona_id"
     }
-set list_name "iscrizioni"
 template::list::create \
-    -name $list_name \
-    -multirow $list_name \
+    -name iscrizioni \
+    -multirow iscrizioni \
     -actions "{Aggiungi esame} {[export_vars -base iscritti-esami-gest {persona_id}]} {Aggiungi esami all'utente}" \
     -key esame_id \
     -caption "Esami a cui è iscritto" \
     -elements {
+	anno {
+	    label "PFAwards"
+	}
 	esame_id {
 	    label "ID Esame"
 	}
@@ -71,6 +73,6 @@ template::list::create \
 db_multirow \
     -extend {
 	delete_url
-    } $list_name query "SELECT e.esame_id, c.titolo as denominazione, e.start_time, e.end_time, e.punti, e.scadenza, e.decorrenza, e.data_iscr FROM awards_esami e, awards_categorie c WHERE persona_id = :persona_id AND e.categoria_id = c.categoria_id " {
+    } iscrizioni query "SELECT e.award_id, ed.anno, e.esame_id, c.titolo as denominazione, e.start_time, e.end_time, e.punti, to_char(e.scadenza, 'DD/MM/YYYY') AS scadenza, e.decorrenza, e.data_iscr FROM awards_esami e, awards_edizioni ed, awards_categorie c WHERE e.persona_id = :persona_id AND e.categoria_id = c.categoria_id AND e.award_id = ed.award_id ORDER BY e.award_id desc, e.categoria_id desc" {
 	set delete_url [export_vars -base "iscritti-esami-canc" {esame_id persona_id}]
     }

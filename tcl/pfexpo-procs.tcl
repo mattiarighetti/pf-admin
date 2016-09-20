@@ -43,3 +43,14 @@ ad_proc -public pf::expo::edition_id {
     }
     return 1
 }
+
+namespace eval pf::awards {}
+
+ad_proc -public pf::awards::id {
+} {
+    if {[ad_get_cookie award_id] != ""} {
+	return [ad_get_cookie award_id]
+    } else {
+	ad_return_complaint 1 "Nessuna edizione PFAWARDS selezionata. <a href=\"index\">Ritorna al menu per selezionarla</a>."
+    }
+}

@@ -5,12 +5,10 @@ ad_page_contract {
     evento_id:naturalnum
 }
 pf::user_must_admin
-template::head::add_css -href ../dashboard.css
-set admin_menu [pf::admin_menu "pfexpo"]
-set page_title "Eventi"
-set context [list [list /pfexpo "PFEXPO"] $page_title]
-set evento_html [db_string query "select denominazione from expo_eventi where evento_id = :evento_id"]
-set actions [list "Aggiungi docenter" eventi-docenti-gest?evento_id=$evento_id "Aggiunge un nuovo docente all'evento."]
+set page_title "Docenti di "
+append page_title [db_string query "select denominazione from expo_eventi where evento_id = :evento_id"]
+set context [list [list index "PFEXPO"] [list eventi-list "Eventi"] $page_title]
+set actions [list "Aggiungi docente" [export_vars -base "eventi-docenti-gest" {evento_id}] "Aggiunge un nuovo docente all'evento."]
 template::list::create \
     -name docenti \
     -multirow docenti \

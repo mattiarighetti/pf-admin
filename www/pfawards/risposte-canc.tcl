@@ -1,18 +1,15 @@
 ad_page_contract {
-    @author Mattia Righetti (mattia.righetti@mail.polimi.it)
+    @author Mattia Righetti (mattia.righetti@professionefinanza.com)
 } {
-    risposta_id:integer
+    persona_id:integer
 }
-set user_id [ad_conn user_id]
-set user_admin [db_0or1row query "SELECT * FROM pf_iscritti WHERE iscritto_id = :user_id"]
-if {$user_id == 0 || $user_admin == 1} {
-    ad_returnredirect "login?return_url=/pfawards/"
-}
+pf::user_must_admin
+set award_id [db_string query "select award_id from awards_edizioni where attivo is true limit 1"]
 with_catch errmsg {
-    db_dml query "DELETE FROM pf_risposte WHERE risposta_id = :risposte_id"
+    db_dml query "DELETE FROM awards_esami WHERE persona_id = :persona_id and award_id = :award_id"
 } {
-    ad_return_complaint 1 "<b>Attenzione: non è stato possibile cancellare la domanda. Si prega di tornare indietro e riprovare.</b>" 
+    ad_return_complaint 1 "Si è verificato un errore nel cancellare le iscrizioni dell'utente selezionato. Si prega di tornare indietro e riprovare.<br><br>L'errore riportato dal database è il seguente:<br><code>$errmsg</code>" 
     return
 }
-ad_returnredirect "risposte-list"
+ad_returnredirect "iscritti-list"
 ad_script_abort

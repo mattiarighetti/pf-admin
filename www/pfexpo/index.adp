@@ -18,13 +18,15 @@
 	      <input class="btn btn-success" type="button" value="Nuovo" onClick="location.href='expo-gest'" />
 	      <input class="btn btn-success" type="button" value="Modifica" onClick="location.href='expo-gest?expo_id=@expo_id;noquote@'" />
           </div>
-	  </formtemplate><br />
+			     </formtemplate><br />
+	  <b>Edizione corrente</b>
 	  <ul>
 	  <li><a href="eventi-list">Eventi</a></li>
 	  <li><a href="iscritti-list">Iscritti</a></li>
+	  <li><a href="edizioni-partners-list">Partners</a></li>
 	  <li><a href="voucher-list">Voucher</a></li>
 	  <li><a href="partecipati-list">Presenze</a></li>
-	</ul>
+	  </ul>
       </td>
 	<td>
 	  <big>
@@ -41,7 +43,8 @@
 	      <li><a href="luoghi-list">Luoghi</a></li>
 	      <li><a href="speakers-list">Speakers</a></li>
 	      <li><a href="partners-list">Partners</a></li>
-	</small>
+	      <li><a href="percorsi-list">Percorsi</a></li>
+	  </small>
     </td>
 	    </tr>
 	  </table>
