@@ -85,5 +85,5 @@ db_multirow \
     } domande query "SELECT d.testo as domanda, d.domanda_id, c.titolo as categoria from awards_domande d, awards_categorie c where c.categoria_id = d.categoria_id [template::list::filter_where_clauses -name domande -and] [template::list::orderby_clause -name domande -orderby] LIMIT $rows_per_page OFFSET $offset" {
 	set edit_url [export_vars -base "domande-gest" {domanda_id}]
 	set risposte_url [export_vars -base "risposte-list" {domanda_id}]
-	set delete_url [export_vars -base "domanda-canc" {domanda_id}]
+	set delete_url [export_vars -base "domande-canc" {domanda_id}]
     }

@@ -18,7 +18,7 @@ if {![info exists expo_id]} {
 	set expo_id [db_string query "select expo_id from expo_edizioni order by data desc limit 1"]
     }
 }
-set actions "{Nuovo} {iscritti-gest} {Crea un nuovo iscritto} {Esporta} {[export_vars -base iscritti-excel {expo_id}]} {Esporta un file Excel con gli iscritti al PFEXPO selezionato}"
+set actions "{Nuovo} {iscritti-gest} {Crea un nuovo iscritto} {Esporta} {[export_vars -base iscritti-export {expo_id}]} {Esporta un file Excel con gli iscritti al PFEXPO selezionato}"
 source [ah::package_root -package_key ah-util]/paging-buttons.tcl
 template::list::create \
     -name "iscritti" \
