@@ -1,8 +1,0 @@
-ad_page_contract {
-    @author Mattia Righetti (mattia.righetti@professionefinanza.com)
-    @creation-date Wednesday 14 October 2015
-}
-pf::user_must_admin
-set page_title "Demo"
-set context [list $page_title]
-ad_return_template

@@ -33,10 +33,10 @@ ad_form -name domanda \
 	"SELECT testo, categoria_id FROM awards_domande WHERE domanda_id = :domanda_id"
     } -new_data {
 	set domanda_id [db_string query "SELECT COALESCE (MAX(domanda_id) + 1, 1) FROM awards_domande"]
-	db_dml query "INSERT INTO awards_domande (domanda_id, corpo, categoria_id, award_id) VALUES (:domanda_id, :corpo, :categoria_id, :award_id)"
+	db_dml query "INSERT INTO awards_domande (domanda_id, testo, categoria_id, award_id) VALUES (:domanda_id, :testo, :categoria_id, :award_id)"
 	set return_url [export_vars -base "risposte-list" {domanda_id}]
     } -edit_data {
-	db_dml query "UPDATE itfaw_domande SET corpo = :corpo, categoria_id = :categoria_id WHERE domanda_id = :domanda_id"
+	db_dml query "UPDATE awards_domande SET testo = :testo, categoria_id = :categoria_id WHERE domanda_id = :domanda_id"
 	set return_url "domande-list"
     } -after_submit {
 	ad_returnredirect $return_url

@@ -7,5 +7,6 @@
   <ul>
     <li>@attiva_button;noquote@</li>
     <li><a href="domande-list">Gestione quesiti</a></li>
-	</ul>
+    <li><a href="utenti-list">Gestione utenti</a></li>
+	  </ul>
   

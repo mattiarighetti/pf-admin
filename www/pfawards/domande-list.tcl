@@ -10,6 +10,7 @@ ad_page_contract {
     categoria_id:optional
 }
 pf::user_must_admin
+set award_id [pf::awards::id]
 set page_title "Domande"
 set context [list [list index "PFAwards"]  $page_title]
 set actions "{Nuova} {domande-gest} {Crea una nuova domanda}"
@@ -82,7 +83,7 @@ db_multirow \
 	edit_url
 	risposte_url
 	delete_url
-    } domande query "SELECT d.testo as domanda, d.domanda_id, c.titolo as categoria from awards_domande d, awards_categorie c where c.categoria_id = d.categoria_id [template::list::filter_where_clauses -name domande -and] [template::list::orderby_clause -name domande -orderby] LIMIT $rows_per_page OFFSET $offset" {
+    } domande query "SELECT d.testo as domanda, d.domanda_id, c.titolo as categoria from awards_domande d, awards_categorie c where c.categoria_id = d.categoria_id [template::list::filter_where_clauses -name domande -and] AND award_id = :award_id [template::list::orderby_clause -name domande -orderby] LIMIT $rows_per_page OFFSET $offset" {
 	set edit_url [export_vars -base "domande-gest" {domanda_id}]
 	set risposte_url [export_vars -base "risposte-list" {domanda_id}]
 	set delete_url [export_vars -base "domande-canc" {domanda_id}]
