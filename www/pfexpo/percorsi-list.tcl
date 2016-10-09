@@ -32,7 +32,7 @@ db_multirow \
     -extend {
 	edit_url
 	delete_url
-    } percorsi query "select percorso_id, descrizione as denominazione from expo_percorsi order by percorso_id" {
+    } percorsi query "select percorso_id, denominazione from expo_percorsi order by percorso_id" {
 	set edit_url [export_vars -base "percorsi-gest" {percorso_id}]
 	set delete_url [export_vars -base "percorsi-canc" {percorso_id}]
     }

@@ -51,6 +51,8 @@ ad_proc -public pf::awards::id {
     if {[ad_get_cookie award_id] != ""} {
 	return [ad_get_cookie award_id]
     } else {
-	ad_return_complaint 1 "Nessuna edizione PFAWARDS selezionata. <a href=\"index\">Ritorna al menu per selezionarla</a>."
+	set award_id [db_string query "select award_id from awards_edizioni order by attivo, award_id desc limit 1"]
+	ad_set_cookie award_id $award_id
+	return $award_id
     }
 }

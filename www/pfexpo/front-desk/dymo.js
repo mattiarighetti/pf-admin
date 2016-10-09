@@ -3622,11 +3622,6 @@ function printBadge(barcode, first_name, last_name, courses)
         if (printerName == "")
             throw "Problema con la stampante. Chiama Mattia.";
 
-	// CONTA - Mattia
-	var xmlhttp = new XMLHttpRequest();
-	xmlhttp.open("get", "conta.tcl", true);
-	xmlhttp.send();
-	
 	// finally print the label
         label.print(printerName);
     }
