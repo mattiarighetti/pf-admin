@@ -76,6 +76,6 @@ db_multirow \
 	edit_url
 	delete_url
     } domande query "SELECT substring(d.testo from 0 for 150)||'...' as domanda, d.domanda_id, c.titolo as categoria from awards_domande_2 d, awards_categorie c where c.categoria_id = d.categoria_id [template::list::filter_where_clauses -name domande -and] AND award_id = :award_id [template::list::orderby_clause -name domande -orderby] LIMIT $rows_per_page OFFSET $offset" {
-	set edit_url [export_vars -base "domande-gest" {domanda_id}]
-	set delete_url [export_vars -base "domande-canc" {domanda_id}]
+	set edit_url [export_vars -base "domande2-gest" {domanda_id}]
+	set delete_url [export_vars -base "domande2-canc" {domanda_id}]
     }

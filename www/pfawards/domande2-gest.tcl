@@ -30,15 +30,13 @@ ad_form -name domanda \
 	    {html {rows 6 cols 50 wrap soft}}
 	}
     } -select_query {
-	"SELECT testo, categoria_id FROM awards_domande WHERE domanda_id = :domanda_id"
+	"SELECT testo, categoria_id FROM awards_domande_2 WHERE domanda_id = :domanda_id"
     } -new_data {
-	set domanda_id [db_string query "SELECT COALESCE (MAX(domanda_id) + 1, 1) FROM awards_domande"]
-	db_dml query "INSERT INTO awards_domande (domanda_id, testo, categoria_id, award_id) VALUES (:domanda_id, :testo, :categoria_id, :award_id)"
-	set return_url [export_vars -base "risposte-list" {domanda_id}]
+	set domanda_id [db_string query "SELECT COALESCE (MAX(domanda_id) + 1, 1) FROM awards_domande_2"]
+	db_dml query "INSERT INTO awards_domande_2 (domanda_id, testo, categoria_id, award_id) VALUES (:domanda_id, :testo, :categoria_id, :award_id)"
     } -edit_data {
-	db_dml query "UPDATE awards_domande SET testo = :testo, categoria_id = :categoria_id WHERE domanda_id = :domanda_id"
-	set return_url "domande-list"
+	db_dml query "UPDATE awards_domande_2 SET testo = :testo, categoria_id = :categoria_id WHERE domanda_id = :domanda_id"
     } -after_submit {
-	ad_returnredirect $return_url
+	ad_returnredirect "domande2-list"
 	ad_script_abort
     }

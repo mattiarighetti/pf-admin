@@ -54,6 +54,9 @@ template::list::create \
 	denominazione {
 	    label "Categoria"
 	}
+	stato {
+	    label "Stato"
+	}
 	data_iscr {
 	    label "Data iscrizione"
 	}
@@ -62,6 +65,11 @@ template::list::create \
 	}
 	scadenza {
 	    label "Scadenza"
+	}
+	view {
+	    link_url_col view_url
+	    sub_class narrow
+	    display_template {PDF}
 	}
 	delete {
 	    link_html {title "Cancella iscrizione"}
@@ -72,7 +80,9 @@ template::list::create \
     }
 db_multirow \
     -extend {
+	view_url
 	delete_url
-    } iscrizioni query "SELECT e.award_id, ed.anno, e.esame_id, c.titolo as denominazione, e.start_time, e.end_time, e.punti, to_char(e.scadenza, 'DD/MM/YYYY') AS scadenza, e.decorrenza, e.data_iscr FROM awards_esami e, awards_edizioni ed, awards_categorie c WHERE e.persona_id = :persona_id AND e.categoria_id = c.categoria_id AND e.award_id = ed.award_id ORDER BY e.award_id desc, e.categoria_id desc" {
+    } iscrizioni query "SELECT e.award_id, ed.anno, e.esame_id, c.titolo as denominazione, e.start_time, e.end_time, e.punti, to_char(e.scadenza, 'DD/MM/YYYY') AS scadenza, e.decorrenza, e.pdf_doc, e.data_iscr, initcap(lower(e.stato)) as stato FROM awards_esami e, awards_edizioni ed, awards_categorie c WHERE e.persona_id = :persona_id AND e.categoria_id = c.categoria_id AND e.award_id = ed.award_id ORDER BY e.award_id desc, e.categoria_id desc, e.start_time desc" {
+	set view_url $pdf_doc
 	set delete_url [export_vars -base "iscritti-esami-canc" {esame_id persona_id}]
     }
