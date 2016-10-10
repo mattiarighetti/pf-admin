@@ -15,7 +15,7 @@ if {[ad_form_new_p -key domanda_id]} {
     append page_title "$domanda_id"
     set buttons [list [list "Aggiorna" edit]]
 }
-set context [list [list index "PFAwards"] [list domande-list "Quesiti prima fase"] $page_title]
+set context [list [list index "PFAwards"] [list domande-list "Quesiti seconda fase"] $page_title]
 ad_form -name domanda \
     -edit_buttons $buttons \
     -has_edit 1 \

@@ -30,4 +30,7 @@ ad_form -name edizione \
 	ad_set_cookie award_id $award_id
     }
 set tot_iscritti [db_string query "select count(distinct(persona_id)) from awards_esami where award_id = :award_id"]
+set awards_fase [db_string query "select case when current_date < inizio1 then 'Iscrizioni' when current_date between inizio1 and fine1 then 'Prima fase' when current_date between inizio2 and fine2 then 'Seconda fase' when current_date > fine2 then 'Fine' end from awards_edizioni where award_id = :award_id"]
+
+
 ad_return_template

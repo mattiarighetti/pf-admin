@@ -10,9 +10,9 @@ ad_page_contract {
     categoria_id:optional
 }
 pf::user_must_admin
-set page_title "Quesiti prima fase"
+set page_title "Quesiti seconda fase"
 set context [list [list index "PFAwards"]  $page_title]
-set actions "{Nuova} {domande-gest} {Crea una nuova domanda}"
+set actions "{Nuova} {domande2-gest} {Crea una nuova domanda}"
 source [ah::package_root -package_key ah-util]/paging-buttons.tcl
 template::list::create \
     -name domande \
@@ -34,12 +34,6 @@ template::list::create \
 	    link_url_col edit_url
 	    display_template "<img src=\"http://images.professionefinanza.com/icons/edit.gif\" height=\"12px\" border=\"0\">"
 	    link_html {title "Apri dettaglio"}
-	    sub_class narrow
-	}
-	risposte {
-	    link_url_col risposte_url
-	    display_template "Risposte"
-	    link_html {title "Vedi le risposte"}
 	    sub_class narrow
 	}
 	delete {
@@ -80,10 +74,8 @@ template::list::create \
 db_multirow \
     -extend {
 	edit_url
-	risposte_url
 	delete_url
-    } domande query "SELECT d.testo as domanda, d.domanda_id, c.titolo as categoria from awards_domande d, awards_categorie c where c.categoria_id = d.categoria_id [template::list::filter_where_clauses -name domande -and] AND award_id = :award_id [template::list::orderby_clause -name domande -orderby] LIMIT $rows_per_page OFFSET $offset" {
+    } domande query "SELECT substring(d.testo from 0 for 150)||'...' as domanda, d.domanda_id, c.titolo as categoria from awards_domande_2 d, awards_categorie c where c.categoria_id = d.categoria_id [template::list::filter_where_clauses -name domande -and] AND award_id = :award_id [template::list::orderby_clause -name domande -orderby] LIMIT $rows_per_page OFFSET $offset" {
 	set edit_url [export_vars -base "domande-gest" {domanda_id}]
-	set risposte_url [export_vars -base "risposte-list" {domanda_id}]
 	set delete_url [export_vars -base "domande-canc" {domanda_id}]
     }

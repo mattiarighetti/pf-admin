@@ -10,7 +10,7 @@ ad_page_contract {
     categoria_id:optional
 }
 pf::user_must_admin
-set page_title "Quesiti prima fase"
+set page_title "Domande"
 set context [list [list index "PFAwards"]  $page_title]
 set actions "{Nuova} {domande-gest} {Crea una nuova domanda}"
 source [ah::package_root -package_key ah-util]/paging-buttons.tcl

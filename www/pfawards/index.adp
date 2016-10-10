@@ -21,7 +21,9 @@
 	</formtemplate><br />
 	<b>Edizione corrente</b>
 	  <ul>
-	  <li><a href="domande-list?award_id=@award_id@">Domande</a></li>
+	    <li>Fase dei PFAwards: <b>@awards_fase@</b></li>
+	    <li><a href="domande-list">Quesiti prima fase</a></li>
+	    <li><a href="domande2-list">Quesiti seconda fase</a></li>
 	  <li><a href="iscritti-list">Iscritti</a></li>
 	  <li><a href="esami-list">Esami</a></li>
 	  </ul>
@@ -37,7 +39,6 @@
 	    <center><b>Utility</b></center>
 	    <ul>
 	      <li><a href="demo">Demo PFAwards</a></li>
-	      <li><a href="domande-list">Tutti i quesiti</a></li>
 	      <li><a href="categorie-list">Categorie</a></li>
 	      <li>Comitato</li>
 	  </small>
