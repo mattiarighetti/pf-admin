@@ -49,7 +49,7 @@ template::list::create \
 	q {
 	    hide_p 1
 	    values {$q $q}
-            where_clause {p.nome||p.cognome ILIKE '%$q%'}
+            where_clause {pp.last_name||' '||pp.first_names ILIKE '%$q%'}
         }
 	rows_per_page {
 	    label "Righe"
@@ -60,18 +60,18 @@ template::list::create \
     } -orderby {
 	nome {
 	    label "Nome"
-	    orderby p.nome
+	    orderby pp.first_names
 	}
 	cognome {
 	    label "Cognome"
-	    orderby p.cognome
+	    orderby pp.last_names
 	}
     }
 db_multirow \
     -extend {
 	view_url
 	delete_url
-    } iscritti query "SELECT p.persona_id, INITCAP(LOWER(p.nome)) AS nome, INITCAP(LOWER(p.cognome)) AS cognome, pa.email FROM crm_persone p, awards_esami e, parties pa WHERE pa.party_id = p.user_id AND e.award_id = :award_id AND e.persona_id = p.persona_id [template::list::filter_where_clauses -name iscritti -and] GROUP BY p.persona_id, p.nome, p.cognome, pa.email [template::list::orderby_clause -name iscritti -orderby] LIMIT $rows_per_page OFFSET $offset" {
+    } iscritti query "SELECT p.persona_id, INITCAP(LOWER(pp.first_names)) AS nome, INITCAP(LOWER(pp.last_name)) AS cognome, pa.email FROM crm_persone p, awards_esami e, persons pp, parties pa WHERE p.user_id = pp.person_id AND pa.party_id = p.user_id AND e.award_id = :award_id AND e.persona_id = p.persona_id [template::list::filter_where_clauses -name iscritti -and] GROUP BY p.persona_id, pp.first_names, pp.last_name, pa.email [template::list::orderby_clause -name iscritti -orderby] LIMIT $rows_per_page OFFSET $offset" {
 	set view_url [export_vars -base "iscritti-gest" {persona_id}]
 	set delete_url [export_vars -base "iscritti-canc" {persona_id}]
     }
