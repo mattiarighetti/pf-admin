@@ -5,12 +5,11 @@ ad_page_contract {
     {rows_per_page 50}
     {offset 0}
     {q ""}
-    award_id:integer,optional
+    {award_id [pf::awards::id]}
     orderby:optional
     categoria_id:optional
 }
 pf::user_must_admin
-set award_id [pf::awards::id]
 set page_title "Domande"
 set context [list [list index "PFAwards"]  $page_title]
 set actions "{Nuova} {domande-gest} {Crea una nuova domanda}"
