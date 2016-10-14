@@ -86,16 +86,8 @@ template::list::create -name "bonus" \
 	punti {
 	    label "Punti"
 	}
-	delete {
-	    link_url_col delete_url
-	    display_template "<img src=\"http://images.professionefinanza.com/icons/delete.gif\" height=\"12px\" border=\"0\">"
-	    link_html {title "Elimina"}
-	    sub_class narrow
-	}
     }
-db_multirow -extend {delete_url} bonus query "select bonus_id, descrizione, punti from awards_bonus where esame_id = :esame_id" {
-    set delete_url [export_vars -base "esami-bonus-canc" {bonus_id}]
-}
+db_multirow bonus query "select bonus_id, descrizione, punti from awards_bonus where esame_id = :esame_id"
 #Estrazione quesiti
 if {[db_0or1row query "select * from awards_rispusr where esame_id = :esame_id limit 1"]} {
     set queristi_html "<ul class=\"list-group\">"
