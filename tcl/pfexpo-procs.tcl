@@ -29,7 +29,11 @@ ad_proc -public pf::expo::id {
     if {[ad_get_cookie expo_id] != ""} {
 	return [ad_get_cookie expo_id]
     } else {
-	ad_return_complaint 1 "Nessuna edizione PFEXPO selezionata. <a href=\"index\">Ritorna al menu per selezionarla</a>."
+	if {[db_0or1row query "select * from expo_edizioni where attivo is true limit 1"]} {
+	    return [db_string query "select expo_id from expo_edizioni where attivo is true"]
+	} else {
+	    ad_return_complaint 1 "Nessuna edizione PFEXPO selezionata. <a href=\"index\">Ritorna al menu per selezionarla</a>."
+	}
     }
 }
 

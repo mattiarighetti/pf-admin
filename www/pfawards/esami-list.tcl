@@ -19,8 +19,9 @@ template::list::create \
     -multirow esami \
     -actions $actions \
     -elements {
-	esame_id {
+	numero {
 	    label "Esame"
+	    link_url_col esame_url
 	}	
 	nominativo {
 	    label "Nominativo"
@@ -49,7 +50,7 @@ template::list::create \
 	reset {
 	    link_url_col reset_url
 	    display_template {<img src="http://images.professionefinanza.com/icons/reset_timer.png" width="20px" height="20px" border="0">}
-	    link_html {title "Resetta tempo." onClick "return(confirm('Cliccando su OK aggiungerai 30 minuti in più.'));"}
+	    link_html {title "Resetta tempo." onClick "return(confirm('Confermi di voler continuare?'));"}
 	    sub_class narrow
 	}
 	view {
@@ -84,8 +85,8 @@ template::list::create \
 	}
     } \
     -orderby {
-	default_value esame_id
-	esame_id {
+	default_value numero
+	numero {
 	    label "Esame"
 	    orderby e.esame_id
 	}
@@ -100,13 +101,14 @@ template::list::create \
     }
 db_multirow \
     -extend {
-	edit_url
+	esame_url
 	view_url
 	reset_url
 	delete_url 
-    } esami query "SELECT '#'||e.esame_id AS esame_id, c.titolo as categoria, TO_CHAR(e.start_time, 'DD/MM/YYYY HH24:MI') AS start_time, TO_CHAR(e.end_time, 'DD/MM/YYYY HH24:MI') as end_time, e.punti, e.attivato, INITCAP(LOWER(e.stato)) AS stato, e.pdf_doc, UPPER(pp.last_name)||' '||INITCAP(LOWER(pp.first_names))||' (#'||p.user_id||')' AS nominativo FROM awards_esami e, crm_persone p, persons pp, awards_categorie c WHERE e.award_id = :award_id AND e.persona_id = p.persona_id AND p.user_id = pp.person_id AND c.categoria_id = e.categoria_id [template::list::filter_where_clauses -name esami -and] [template::list::orderby_clause -name esami -orderby] LIMIT $rows_per_page OFFSET $offset" {
-	set edit_url [export_vars -base "esami-gest" {esame_id}]
+    } esami query "SELECT '#'||e.esame_id AS numero, e.esame_id, c.titolo as categoria, TO_CHAR(e.start_time, 'DD/MM/YYYY HH24:MI') AS start_time, TO_CHAR(e.end_time, 'DD/MM/YYYY HH24:MI') as end_time, e.punti, e.attivato, INITCAP(LOWER(e.stato)) AS stato, e.pdf_doc, UPPER(pp.last_name)||' '||INITCAP(LOWER(pp.first_names))||' (#'||p.user_id||')' AS nominativo FROM awards_esami e, crm_persone p, persons pp, awards_categorie c WHERE e.award_id = :award_id AND e.persona_id = p.persona_id AND p.user_id = pp.person_id AND c.categoria_id = e.categoria_id [template::list::filter_where_clauses -name esami -and] [template::list::orderby_clause -name esami -orderby] LIMIT $rows_per_page OFFSET $offset" {
+	set esame_url [export_vars -base "esami-gest" {esame_id}]
 	set view_url $pdf_doc
-	set reset_url [export_vars -base "esami-reset" {esame_id}]
+	set return_url "esami-list"
+	set reset_url [export_vars -base "esami-reset" {esame_id return_url}]
 	set delete_url [export_vars -base "esami-canc" {esame_id}]
     }
