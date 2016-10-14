@@ -72,10 +72,11 @@ ad_form -name docente \
 		    append file_name ".png"
 		}
 		ns_rename $filepath /usr/share/openacs/packages/images/www/docenti/$file_name
-		db_dml query "INSERT INTO docenti (nome, cognome, short_cv, immagine, comitato_awards, patrimonia_forum) VALUES (:nome, :cognome, :short_cv, :filename, :comitato_awards, :patrimonia_forum)"
+		set docente_id [db_string query "select coalesce(max(docente_id) + trunc(random()*99), trunc(random()*))) from docenti"]
+		db_dml query "INSERT INTO docenti (docente_id, nome, cognome, short_cv, immagine, comitato_awards, patrimonia_forum) VALUES (:docente_id, :nome, :cognome, :short_cv, :filename, :comitato_awards, :patrimonia_forum)"
 	    }
 	} else {
-	    	db_dml query "INSERT INTO docenti (nome, cognome, short_cv, comitato_awards, patrimonia_forum) VALUES (:nome, :cognome, :short_cv, :comitato_awards, :patrimonia_forum)"
+	    	db_dml query "INSERT INTO docenti (docente_id, nome, cognome, short_cv, comitato_awards, patrimonia_forum) VALUES (:docente_id, :nome, :cognome, :short_cv, :comitato_awards, :patrimonia_forum)"
 	}
     } -edit_data {
     	if {$upload_file eq ""} {
