@@ -14,7 +14,7 @@
 		</tr>
 		<tr>
 		  <td>
-		    <input class="input" type="text" value="@q;noquote@" name="q" id="ricerca" style="width:235px" />
+		    <input class="input" type="text" placeholder="Cognome, Codice Esame o Codice Persona" value="@q;noquote@" name="q" id="ricerca" style="width:235px" />
 		  </td>
 		</tr>
 		<tr>

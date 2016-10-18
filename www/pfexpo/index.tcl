@@ -34,27 +34,38 @@ ad_form -name edizione \
 set giorni [db_string query "select data - current_date from expo_edizioni where expo_id = :expo_id"]
 set tot_iscr [db_string query "select count(distinct(email)) from expo_iscritti where expo_id = :expo_id"]
 set oggi_iscr [db_string query "select count(distinct(email)) from expo_iscritti where data = current_date and expo_id = :expo_id"]
-#Estrazione tabella eventi
+
+#CREAZIONE TABELLA ORARIA
 set orari [db_list query "select * from (select start_time as orari from expo_eventi where expo_id = :expo_id union select end_time as orari from expo_eventi where expo_id = :expo_id) t order by orari"]
 set events_table "<table border=\"1\" cellspacing=\"10px\" cellpadding=\"10px\"><tbody><tr><td><img class=\"center-block\" height=\"auto\" width=\"120px\" src=\"http://images.professionefinanza.com/logos/pfexpo.png\"></td>"
 #Estrazione sale
 db_foreach query "select s.denominazione from expo_sale s, expo_luoghi l, expo_edizioni e where e.expo_id = :expo_id and e.luogo_id = l.luogo_id and s.luogo_id = l.luogo_id order by s.sala_id" {
-    append events_table "<td><center><h3>" $denominazione "</h3></center><br></td>"
+    append events_table "<td> Sala " $denominazione "<br></td>"
 }
 append events_table "</tr>"
 foreach orario $orari {
-    append events_table "<tr>\n<td class=\"blue\">" [db_string query "select to_char(:orario::timestamp, 'HH24:MI')"] "</td>\n"
-    db_foreach query "select e.evento_id, e.denominazione,  c.hex_color, e.permalink, e.start_time, e.end_time from expo_eventi e, expo_percorsi c where e.start_time = :orario and c.percorso_id = e.percorso_id order by sala_id" {
-	set rowspan [expr [lsearch $orari $end_time] - [lsearch $orari $start_time]]
-	if {$rowspan == 1} {
-	    set rowspan 1
-	} else {
-	#    incr rowspan
+    set num_orari [llength $orari]
+    if {[lsearch $orari $orario] ne [expr $num_orari - 1]} {
+	set orario_next [lsearch $orari $orario]
+	incr orario_next
+	set orario_next [lindex $orari $orario_next]
+	append events_table "<tr>\n<td>" [db_string query "select to_char('$orario'::timestamp, 'HH24:MI')||' - '||to_char('$orario_next'::timestamp, 'HH24:MI')"] "</td>\n"
+	db_foreach query "select e.evento_id, e.denominazione, e.percorso_id, e.soldout,case when e.prezzo > 0::money then 'p' else 'g' end as prezzo, c.hex_color, e.permalink, e.start_time, e.end_time from expo_eventi e, expo_percorsi c where e.start_time = :orario and c.percorso_id = e.percorso_id order by sala_id" {
+	    set rowspan [expr [lsearch $orari $end_time] - [lsearch $orari $start_time]]
+	    append events_table "<td rowspan=\"" $rowspan "\" bgcolor=\"" $hex_color "\"><a href=\"/programma/" $permalink "\">"
+	    if {$prezzo eq "p"} {
+		append events_table "<img height=\"100px\" width=\"auto\" src=\"http://images.professionefinanza.com/pfexpo/icons/moneta_bianca.png\" align=\"right\">"
+	    }
+	    append events_table "<font color=\"#ffffff\"><big><b>" $denominazione "</b></bog></font><br><img height=\"\" width=\"auto\" src=\"" "\" align=\"right\"><br>"
+	    if {[db_0or1row query "select * from expo_percorsi where percorso_id = :percorso_id and icon_white is not null"]} {
+		set icon_white [db_string query "select icon_white from expo_percorsi where percorso_id = :percorso_id"]
+		append events_table "<img align=\"right\" width=\"50px\" src=\"http://images.professionefinanza.com/categorie/white/$icon_white\" />"
+	    }
+	    append events_table "</a></td>\n"
 	}
-	append events_table "<td rowspan=\"" $rowspan "\" bgcolor=\"" $hex_color "\"><a href=\"" $permalink "\"><p><strong>" $denominazione ($evento_id) "</strong></p><br></a></td>\n"
+	append events_table "</tr>\n"
     }
-    append events_table "</tr>\n"
-    }
+}
 append events_table "</tbody></table>"
 
 ad_return_template

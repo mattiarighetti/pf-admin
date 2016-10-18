@@ -7,17 +7,11 @@ ad_page_contract {
     {q ""}
     orderby:optional
     evento_id:integer,optional
+    {expo_id [pf::expo::id]}
 }
 pf::user_must_admin
 set page_title "Iscritti"
 set context [list [list index "PFEXPO"] $page_title]
-if {![info exists expo_id]} {
-    if {[ad_get_cookie expo_id] != ""} {
-	set expo_id [ad_get_cookie expo_id]
-    } else {
-	set expo_id [db_string query "select expo_id from expo_edizioni order by data desc limit 1"]
-    }
-}
 set actions "{Nuovo} {iscritti-gest} {Crea un nuovo iscritto} {Esporta} {[export_vars -base iscritti-export {expo_id}]} {Esporta un file Excel con gli iscritti al PFEXPO selezionato}"
 source [ah::package_root -package_key ah-util]/paging-buttons.tcl
 template::list::create \
@@ -45,9 +39,6 @@ template::list::create \
 	data {
 	    label "Data iscrizione"
 	}
-	eventi {
-	    label "Eventi"
-	}
 	pagato {
 	    label "Vip pass"
 	    link_url_col vip_url
@@ -69,7 +60,7 @@ template::list::create \
 	q {
             hide_p 1
             values {$q $q}
-            where_clause {p.nome||p.cognome||p.societa||p.email||p.iscritto_id ILIKE '%$q%'}
+            where_clause {p.nome||p.cognome||p.email||p.iscritto_id ILIKE '%$q%'}
         }
 	rows_per_page {
 	    label "Righe"
@@ -102,7 +93,7 @@ db_multirow \
 	vip_url
 	view_url
 	delete_url
-    } iscritti query "SELECT p.iscritto_id, INITCAP(LOWER(p.nome)) AS nome, INITCAP(LOWER(p.cognome)) AS cognome, p.email, p.societa, COUNT(i.evento_id) as eventi, case when p.pagato is true then 'Pagato' else 'No' end as pagato, p.data FROM expo_iscritti p LEFT OUTER JOIN expo_iscrizioni i ON p.iscritto_id = i.iscritto_id WHERE p.expo_id = :expo_id [template::list::filter_where_clauses -name iscritti -and] group by p.iscritto_id, p.nome, p.cognome, p.email, p.societa, p.pagato, p.data [template::list::orderby_clause -name iscritti -orderby] LIMIT $rows_per_page OFFSET $offset" {
+    } iscritti query "SELECT p.iscritto_id, INITCAP(LOWER(p.nome)) AS nome, INITCAP(LOWER(p.cognome)) AS cognome, p.email, p.societa, case when p.pagato is true then 'Pagato' else 'No' end as pagato, p.data FROM expo_iscritti p WHERE p.expo_id = :expo_id [template::list::filter_where_clauses -name iscritti -and] [template::list::orderby_clause -name iscritti -orderby] LIMIT $rows_per_page OFFSET $offset" {
 	set return_url [ad_return_url -qualified urlencode]
 	set vip_url [export_vars -base "iscritti-vip" {iscritto_id return_url}]
 	set view_url [export_vars -base "iscritti-gest" {iscritto_id}]

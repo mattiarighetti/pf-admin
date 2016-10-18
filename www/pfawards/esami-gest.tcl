@@ -109,6 +109,7 @@ if {[db_0or1row query "select * from awards_rispusr where esame_id = :esame_id l
 		append quesiti_html "   (#$risposta_id)   - $testo ($punti)<br />"
 	    }
 	}
+	incr counter
 	append quesiti_html "</li>"
     }
     append quesiti_html "</ul>"

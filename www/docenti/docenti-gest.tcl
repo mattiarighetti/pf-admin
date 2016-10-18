@@ -58,6 +58,7 @@ ad_form -name docente \
 	"select nome, cognome, short_cv, immagine, case when comitato_awards is true then 1 else 0 end as comitato_awards, case when patrimonia_forum is true then 1 else 0 end as patrimonia_forum from docenti where docente_id = :docente_id"
     } -validate {
     } -new_data {
+	set docente_id [db_string query "select coalesce(max(docente_id) + trunc(random()*99), trunc(random()*99)) from docenti"]
 	if {$upload_file ne ""} {
 	    db_transaction {
 		set docente_id [db_string query "SELECT COALESCE(MAX(docente_id)+1,1) FROM docenti"]
@@ -72,7 +73,6 @@ ad_form -name docente \
 		    append file_name ".png"
 		}
 		ns_rename $filepath /usr/share/openacs/packages/images/www/docenti/$file_name
-		set docente_id [db_string query "select coalesce(max(docente_id) + trunc(random()*99), trunc(random()*))) from docenti"]
 		db_dml query "INSERT INTO docenti (docente_id, nome, cognome, short_cv, immagine, comitato_awards, patrimonia_forum) VALUES (:docente_id, :nome, :cognome, :short_cv, :filename, :comitato_awards, :patrimonia_forum)"
 	    }
 	} else {

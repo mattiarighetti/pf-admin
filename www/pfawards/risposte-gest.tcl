@@ -21,7 +21,7 @@ ad_form -name risposta \
     -has_edit 1 \
     -form {
 	risposta_id:key
-	{corpo:text(textarea),nospell
+	{testo:text(textarea),nospell
 	    {label "Risposta"}
 	    {html {rows 6 cols 50 wrap soft}}
 	}
@@ -32,9 +32,9 @@ ad_form -name risposta \
 	"SELECT testo, punti FROM awards_risposte WHERE risposta_id = :risposta_id"
     } -new_data {
 	set risposta_id [db_string query "SELECT COALESCE (MAX(risposta_id) + 1, 1) FROM awards_risposte"]
-	db_dml query "INSERT INTO awards_risposte (risposta_id, testo, domanda_id, punti) VALUES (:risposta_id, :corpo, :domanda_id, :punti)"
+	db_dml query "INSERT INTO awards_risposte (risposta_id, testo, domanda_id, punti) VALUES (:risposta_id, :testo, :domanda_id, :punti)"
     } -edit_data {
-	db_dml query "UPDATE awards_risposte SET testo = :corpo, punti = :punti WHERE risposta_id = :risposta_id"
+	db_dml query "UPDATE awards_risposte SET testo = :testo, punti = :punti WHERE risposta_id = :risposta_id"
     } -after_submit {
 	ad_returnredirect [export_vars -base "risposte-list" {domanda_id}]
 	ad_script_abort
