@@ -15,8 +15,8 @@
 
 	    </div>      
 	      <input type="hidden" name="module" value="pfexpo" />
-	      <input class="btn btn-success" type="button" value="Nuovo" onClick="location.href='expo-gest'" />
-	      <input class="btn btn-success" type="button" value="Modifica" onClick="location.href='expo-gest?expo_id=@expo_id;noquote@'" />
+	      <input class="btn btn-success" type="button" value="Nuovo" onClick="location.href='edizioni-gest'" />
+	      <input class="btn btn-success" type="button" value="Modifica" onClick="location.href='edizioni-gest?expo_id=@expo_id;noquote@'" />
           </div>
 			     </formtemplate><br />
 	  <b>Edizione corrente</b>
