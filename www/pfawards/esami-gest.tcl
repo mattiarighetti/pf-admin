@@ -6,10 +6,14 @@ ad_page_contract {
 }
 set page_title "Esame #"
 append page_title $esame_id
+set rif_id $esame_id
 set context [list [list index "PFAwards"] [list esami-list "Esami"] $page_title]
+template::head::add_javascript -src "https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"
+template::head::add_javascript -defer -src "http://professionefinanza.cloudapp.net/resources/pf-theme/styles/bootstrap/js/bootstrap.min.js"
+db_1row query "select persona_id, pdf_doc from awards_esami where esame_id = :esame_id"
 #Form generalità
 ad_form -name esame \
-    -mode display \
+    -mode edit \
     -has_edit 0 \
     -has_submit 0 \
     -cancel_url [export_vars -base "esame-canc" {esame_id}] \
@@ -96,7 +100,7 @@ template::list::create -name "bonus" \
 db_multirow -extend {delete_url} bonus query "select bonus_id, descrizione, punti from awards_bonus where esame_id = :esame_id" {
     set delete_url [export_vars -base "esami-bonus-canc" {bonus_id}]
 }
-#Estrazione quesiti
+#Estrazione quesiti prima fase
 if {[db_0or1row query "select * from awards_rispusr where esame_id = :esame_id limit 1"]} {
     set queristi_html "<ul class=\"list-group\">"
     set counter 1
@@ -115,4 +119,16 @@ if {[db_0or1row query "select * from awards_rispusr where esame_id = :esame_id l
     append quesiti_html "</ul>"
 } else {
     set quesiti_html ""
+}
+#Estrazione quesiti seconda fase
+if {[db_0or1row query "select * from awards_esami_2 where rif_id = :rif_id limit 1"]} {
+    set esame2_id [db_string query "select esame_id from awards_esami_2 where rif_id = :rif_id limit 1"]
+    db_foreach query "select domanda_id from awards_rispusr_2 where esame_id = :esame2_id" {
+	set domanda [db_string query "select testo from awards_domande_2 where domanda_id = :domanda_id"]
+	set risposta [db_string query "select risposta from awards_rispusr_2 where domanda_id = :domanda_id and esame_id = :esame2_id"]
+	append quesiti2_html "<b>$domanda</b><br /><font face=\"Times New Roman\">$risposta</font><hr />"
+    }
+} else {
+    set esame2_id ""
+    set quesiti2_html ""
 }

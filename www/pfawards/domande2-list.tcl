@@ -47,7 +47,7 @@ template::list::create \
 	q {
 	    hide_p 1
 	    values {$q $q}
-            where_clause {d.testo ILIKE '%$q%'}
+            where_clause {d.testo||d.domanda_id ILIKE '%$q%' }
         }
 	categoria_id {
 	    label "Categoria"

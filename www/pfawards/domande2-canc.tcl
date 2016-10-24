@@ -5,11 +5,10 @@ ad_page_contract {
 }
 pf::user_must_admin
 with_catch errmsg {
-    db_dml query "DELETE FROM awards_risposte WHERE domanda_id = :domanda_id"
-    db_dml query "DELETE FROM awards_domande WHERE domanda_id = :domanda_id"
+    db_dml query "DELETE FROM awards_domande_2 WHERE domanda_id = :domanda_id"
 } {
     ad_return_complaint 1 "Si è verificato un errore nel cancellare il quesito selezionato. Si prega di tornare indietro e riprovare.<br><br>L'errore riportato dal database è il seguente:<br><code>$errmsg</code>" 
     return
 }
-ad_returnredirect "domande-list"
+ad_returnredirect "domande2-list"
 ad_script_abort

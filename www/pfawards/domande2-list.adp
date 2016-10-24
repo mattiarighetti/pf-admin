@@ -14,14 +14,14 @@
 		</tr>
 		<tr>
 		  <td>
-		    <input class="input" type="text" value="@q;noquote@" name="q" id="ricerca" style="width:235px" />
+		    <input class="input" type="text" value="@q;noquote@" name="q" id="ricerca" placeholder="Testo domanda, codice domanda..." style="width:235px" />
 		  </td>
 		</tr>
 		<tr>
 		  <td>
 		    <center>
 		      <input class="bot" type="submit" value="Cerca" />
-			<input class="bot" type="button" value="Reset" onClick="location.href='domande-list';" />
+			<input class="bot" type="button" value="Reset" onClick="location.href='domande2-list';" />
 		    </center>
 		  </td>	
 		</tr>	
