@@ -8,8 +8,14 @@
       <div class="well well-sm">
 	<a href="esami-reset?esame_id=@esame_id@&return_url=esami-gest" class="btn btn-default"><span class="glyphicon glyphicon-hourglass"></span> Reset</a>
 	<button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal1"><span class="glyphicon glyphicon-th-list"></span> Prima fase</button>
-	<if @quesiti2_html@ ne ""><button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal2"><span class="glyphicon glyphicon-th-list"></span> Seconda fase</button></if><else>
-	<a href="" class="btn btn-default"><span class="glyphicon glyphicon-certificate"></span> Promuovi</a></else>
+	<a class="btn btn-default" href="@pdf_doc_1@" target="_blank"><span class="glyphicon glyphicon-print"></span> Stampa PDF 1</a>
+	<if @quesiti2_html@ ne "">
+	  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal2"><span class="glyphicon glyphicon-th-list"></span> Seconda fase</button>
+	  <a href="@pdf_doc_2@" target="_blank" class="btn btn-default"><span class="glyphicon glyphicon-print"></span> Stampa PDF 2</a>
+      </if>
+	<else>
+	  <a href="" class="btn btn-default"><span class="glyphicon glyphicon-certificate"></span> Promuovi</a>
+  </else>
     </div>
       <table border="0" width="100%">
 	<tr>
@@ -38,7 +44,7 @@
 	      @quesiti_html;noquote@
 	      </div>
 	    <div class="modal-footer">
-	      <a class="btn btn-default" target="_blank" href="@pdf_doc@">Stampa PDF</a><button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	      <a class="btn btn-default" target="_blank" href="@pdf_doc_1@">Stampa PDF</a><button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
 	    </div>
 	  </div>
 	</div>
@@ -56,7 +62,7 @@
 	      @quesiti2_html;noquote@
 	      </div>
 	    <div class="modal-footer">
-	      <!--<a class="btn btn-default" href="@pdf_doc@" target="_blank">Stampa PDF</a>--><button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
+	      <a class="btn btn-default" href="@pdf_doc_2@" target="_blank">Stampa PDF</a>--><button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
 	    </div>
 	  </div>
 	</div>

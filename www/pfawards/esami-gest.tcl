@@ -11,11 +11,11 @@ set context [list [list index "PFAwards"] [list esami-list "Esami"] $page_title]
 template::head::add_javascript -src "https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"
 template::head::add_javascript -defer -src "http://professionefinanza.cloudapp.net/resources/pf-theme/styles/bootstrap/js/bootstrap.min.js"
 db_1row query "select persona_id, pdf_doc from awards_esami where esame_id = :esame_id"
+set pdf_doc_1 $pdf_doc
+set pdf_doc_2 ""
 #Form generalità
 ad_form -name esame \
     -mode edit \
-    -has_edit 0 \
-    -has_submit 0 \
     -cancel_url [export_vars -base "esame-canc" {esame_id}] \
     -cancel_label "Cancella l'esame" \
     -show_required_p 0 \
@@ -63,6 +63,9 @@ ad_form -name esame \
 	"SELECT UPPER(p.last_name)||' '||INITCAP(LOWER(p.first_names)) AS nominativo, e.award_id, e.categoria_id, e.data_iscr, e.decorrenza, e.scadenza, e.stato, e.attivato, e.pdf_doc from awards_esami e, persons p, crm_persone r where e.persona_id = r.persona_id and r.user_id = p.person_id and e.esame_id = :esame_id"
     } -edit_data {
 	db_dml query "UPDATE awards_esami SET decorrenza = $decorrenza, scadenza = $scadenza, attivato = :attivato where esame_id = :esame_id"
+    } -after_submit {
+	ad_returnredirect [export_vars -base "esami-gest" {esame_id}]
+	ad_script_abort
     }
 #Estrazione dati aggiuntivi in caso di svolgimento
 if {[db_0or1row query "select * from awards_esami where start_time is not null and end_time is not null and esame_id = :esame_id"]} {
@@ -123,6 +126,8 @@ if {[db_0or1row query "select * from awards_rispusr where esame_id = :esame_id l
 #Estrazione quesiti seconda fase
 if {[db_0or1row query "select * from awards_esami_2 where rif_id = :rif_id limit 1"]} {
     set esame2_id [db_string query "select esame_id from awards_esami_2 where rif_id = :rif_id limit 1"]
+    set pdf_doc_2 [db_string query "select pdf_doc from awards_esami_2 where esame_id = :esame2_id"]
+    set quesiti2_html ""
     db_foreach query "select domanda_id from awards_rispusr_2 where esame_id = :esame2_id" {
 	set domanda [db_string query "select testo from awards_domande_2 where domanda_id = :domanda_id"]
 	set risposta [db_string query "select risposta from awards_rispusr_2 where domanda_id = :domanda_id and esame_id = :esame2_id"]
