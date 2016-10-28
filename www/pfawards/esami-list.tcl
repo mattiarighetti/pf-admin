@@ -12,7 +12,7 @@ pf::user_must_admin
 set award_id [pf::awards::id]
 set page_title "Esami"
 set context [list [list "index" PFAwards] $page_title]
-set actions {"Aggiungi" esami-gest "Aggiunge una nuova sessione." "Stampa lista" esami-stamp "Stampa gli esami."}
+set actions {"Aggiungi" esami-gest "Aggiunge una nuova sessione." "Stampa lista" esami-stamp "Stampa gli esami." "Esporta promossi" promossi-xls "Esporta promossi in Excel"}
 source [ah::package_root -package_key ah-util]/paging-buttons.tcl
 template::list::create \
     -name esami \
